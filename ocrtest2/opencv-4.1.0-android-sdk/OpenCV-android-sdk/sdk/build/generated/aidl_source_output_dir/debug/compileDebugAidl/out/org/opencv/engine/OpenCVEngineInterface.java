@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: C:\\github\\graduation\\ocrtest2\\opencv-4.1.0-android-sdk\\OpenCV-android-sdk\\sdk\\java\\src\\org\\opencv\\engine\\OpenCVEngineInterface.aidl
+ * Original file: C:\\github\\graduation\\ocr\\ocrtest2\\opencv-4.1.0-android-sdk\\OpenCV-android-sdk\\sdk\\java\\src\\org\\opencv\\engine\\OpenCVEngineInterface.aidl
  */
 package org.opencv.engine;
 /**
