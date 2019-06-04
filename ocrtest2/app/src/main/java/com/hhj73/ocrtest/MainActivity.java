@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static org.opencv.imgproc.Imgproc.THRESH_TRUNC;
+import static org.opencv.imgproc.Imgproc.THRESH_BINARY;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
                     in.close();
 
-//                    binarization();
+                    binarization();
                     imageView.setImageBitmap(img);
 
                     sTess.setImage(img);
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
 
                     binarization();
 //                    detectEdge();
-                    graysclae();
+//                    graysclae();
                     imageView.setImageBitmap(img);
 
                 }
@@ -235,7 +235,8 @@ public class MainActivity extends AppCompatActivity {
 
         Mat bin = new Mat();
 //        Imgproc.threshold(src, bin, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY);
-        Imgproc.threshold(gray, bin, 200, 255, THRESH_TRUNC);
+//        Imgproc.threshold(gray, bin, 200, 255, THRESH_TRUNC);
+        Imgproc.threshold(gray, bin, 120, 255, THRESH_BINARY);
 
         Utils.matToBitmap(bin, img);
 
