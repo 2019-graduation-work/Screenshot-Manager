@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="500dp" />
+        android:layout_height="400dp" />
 
     <LinearLayout
         android:gravity="center"
@@ -29,10 +29,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="cameraBtnClicked"/>
+
+        <Button
+            android:text="이미지 처리"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="processingBtnClicked"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView"
+        android:text="텍스트"
+        android:textSize="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"/>

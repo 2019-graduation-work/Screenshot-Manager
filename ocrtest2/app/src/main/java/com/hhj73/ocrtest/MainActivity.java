@@ -8,11 +8,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
+
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,9 +28,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static org.opencv.imgproc.Imgproc.THRESH_TRUNC;
+
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "OCR TEST";
     final int GALLERY_CODE = 1;
+    final int PROCESSING_CODE = 2;
 
     ImageView imageView;
     Bitmap img;
@@ -36,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
+        if(!OpenCVLoader.initDebug()) {
+           Log.d(TAG, "OpenCV is not loaded");
+        } else {
+            Log.d(TAG, "OpenCV is successfully loaded!");
+        }
     }
 
     @Override
@@ -59,8 +75,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    boolean checkFile(File dir)
-    {
+    boolean checkFile(File dir) {
         //디렉토리가 없으면 디렉토리를 만들고 그후에 파일을 카피
         if(!dir.exists() && dir.mkdirs()) {
             copyFiles();
@@ -76,8 +91,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    void copyFiles()
-    {
+    void copyFiles() {
         AssetManager assetMgr = this.getAssets();
 
         InputStream is = null;
@@ -107,12 +121,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
-
     public void galleryBtnClicked(View view) {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -123,6 +131,13 @@ public class MainActivity extends AppCompatActivity {
     public void cameraBtnClicked(View view) {
     }
 
+    public void processingBtnClicked(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PROCESSING_CODE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -131,9 +146,18 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK) {
                 try {
                     InputStream in = getContentResolver().openInputStream(data.getData());
+
                     img = BitmapFactory.decodeStream(in);
+
+                    int height = img.getHeight();
+                    int width = img.getWidth();
+
+//                    img = Bitmap.createScaledBitmap(img, width/3, height/3, true);
+                    String str = width + ", " + height;
+                    Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
                     in.close();
 
+//                    binarization();
                     imageView.setImageBitmap(img);
 
                     sTess.setImage(img);
@@ -145,5 +169,77 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+        if(requestCode == PROCESSING_CODE) {
+            if(resultCode == RESULT_OK) {
+                try {
+                    InputStream in = getContentResolver().openInputStream(data.getData());
+                    img = BitmapFactory.decodeStream(in);
+
+
+                    binarization();
+//                    detectEdge();
+                    graysclae();
+                    imageView.setImageBitmap(img);
+
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * A native method that is implemented by the 'native-lib' native library,
+     * which is packaged with this application.
+     */
+    public native String stringFromJNI();
+
+
+    public void detectEdge() {
+        Mat src = new Mat();
+        Utils.bitmapToMat(img, src);
+
+        Mat edge = new Mat();
+        Imgproc.Canny(src, edge, 50, 150);
+
+        Utils.matToBitmap(edge, img);
+
+        src.release();
+        edge.release();
+    }
+
+    public void graysclae() {
+        // 회색조
+        Mat src = new Mat();
+        Utils.bitmapToMat(img, src);
+
+        Mat gray = new Mat();
+        Imgproc.cvtColor(src, gray, Imgproc.COLOR_RGB2GRAY);
+
+        Utils.matToBitmap(gray, img);
+
+        src.release();
+        gray.release();
+    }
+
+    public void binarization() {
+        // 이진화
+
+        // grayscale
+        Mat src = new Mat();
+        Mat gray = new Mat();
+        Utils.bitmapToMat(img, src);
+        Imgproc.cvtColor(src, gray, Imgproc.COLOR_RGB2GRAY);
+
+        Mat bin = new Mat();
+//        Imgproc.threshold(src, bin, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY);
+        Imgproc.threshold(gray, bin, 200, 255, THRESH_TRUNC);
+
+        Utils.matToBitmap(bin, img);
+
+        src.release();
+        bin.release();
     }
 }
