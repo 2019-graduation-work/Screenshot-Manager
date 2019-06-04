@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView imageView;
     Bitmap img;
-    TextView textView;
+    TextView beforeText;
+    TextView afterText;
 
     String datapath = "";
     String lang = "";
@@ -64,8 +65,11 @@ public class MainActivity extends AppCompatActivity {
 //        tv.setText(stringFromJNI());
 
         imageView = (ImageView) findViewById(R.id.imageView);
-        textView = (TextView) findViewById(R.id.textView);
-        textView.setMovementMethod(new ScrollingMovementMethod());
+        beforeText = (TextView) findViewById(R.id.beforeText);
+        afterText = (TextView) findViewById(R.id.afterText);
+
+        beforeText.setMovementMethod(new ScrollingMovementMethod());
+        afterText.setMovementMethod(new ScrollingMovementMethod());
 
         sTess = new TessBaseAPI();
         lang = "kor+eng";
@@ -157,12 +161,12 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
                     in.close();
 
-                    binarization();
+//                    binarization();
                     imageView.setImageBitmap(img);
 
                     sTess.setImage(img);
                     String result = sTess.getUTF8Text();
-                    textView.setText(result);
+                    beforeText.setText(result);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -176,12 +180,13 @@ public class MainActivity extends AppCompatActivity {
                     InputStream in = getContentResolver().openInputStream(data.getData());
                     img = BitmapFactory.decodeStream(in);
 
-
                     binarization();
-//                    detectEdge();
-//                    graysclae();
-                    imageView.setImageBitmap(img);
 
+                    sTess.setImage(img);
+                    String result = sTess.getUTF8Text();
+                    afterText.setText(result);
+
+                    imageView.setImageBitmap(img);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
