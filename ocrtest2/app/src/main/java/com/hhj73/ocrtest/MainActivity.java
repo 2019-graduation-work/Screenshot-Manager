@@ -133,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void cameraBtnClicked(View view) {
+        detectEdge();
+        imageView.setImageBitmap(img);
     }
 
     public void processingBtnClicked(View view) {
@@ -140,6 +142,11 @@ public class MainActivity extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, PROCESSING_CODE);
+    }
+
+    public void activityChangeBtnClicked(View view) {
+        Intent intent = new Intent(this, ProcessingActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -239,13 +246,13 @@ public class MainActivity extends AppCompatActivity {
         Imgproc.cvtColor(src, gray, Imgproc.COLOR_RGB2GRAY);
 
         Mat bin = new Mat();
-//        Imgproc.threshold(src, bin, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY);
-//        Imgproc.threshold(gray, bin, 200, 255, THRESH_TRUNC);
-        Imgproc.threshold(gray, bin, 120, 255, THRESH_BINARY);
+        Imgproc.threshold(gray, bin, 127, 255, THRESH_BINARY);
 
         Utils.matToBitmap(bin, img);
 
         src.release();
         bin.release();
     }
+
+
 }

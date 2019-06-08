@@ -35,6 +35,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="processingBtnClicked"/>
+
+        <Button
+            android:text="액티비티 전환"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="activityChangeBtnClicked"/>
     </LinearLayout>
 
     <LinearLayout
