@@ -78,30 +78,28 @@ public class ProcessingActivity extends AppCompatActivity {
         return edge;
     }
 
-    public Mat removeEdge(Mat src) {
+    public Mat findBorderComponents(Mat src) {
         // 3. 외곽 검출해서 없애버리기
         Mat hierarchy = new Mat();
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
         // 3-1. findContours로 검출한 문서 외곽 (사각형 바깥쪽) 픽셀을 모두 검은색으로 만든다.
         Imgproc.findContours(src, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+        ArrayList<Borders> borders = new ArrayList<>();
+        int area = src.rows() * src.cols();
 
         for(int i=0; i<contours.size(); i++) {
-            ArrayList<Borders> borders = new ArrayList<>();
-            int area = src.rows() * src.cols();
-
             Rect r = boundingRect(contours.get(i));
             if(r.width * r.height > 0.5 * area) {
                 borders.add(new Borders(i, r.x, r.y, r.x+r.width-1, r.y + r.height-1));
             }
         }
-//        drawContours(edge, contours, -1, new Scalar(0, 0, 255), 1);
 
-        // 3-2. 블러로 노이즈를 없앤다.
-        Mat noise = new Mat();
-        Imgproc.blur(src, noise, new Size(3, 3));
+//        int i_x1_y1_x2_y2 =
 
-        return noise;
+        MatOfPoint borderContour = contours.get(borders.get(0).i);
+
+        return null;
     }
 
     public Mat doDilation(Mat src) {
@@ -111,16 +109,15 @@ public class ProcessingActivity extends AppCompatActivity {
         return dilated;
     }
 
-    public void findBorderComponents() {
+    public void removeBorders() {
 
     }
-
     public void textDetection(View view) {
         // 텍스트 영역
 
         Mat gray = grayScale();
         Mat edge = cannyEdgeDetect(gray);
-        Mat noise = removeEdge(edge);
+        Mat noise = findBorderComponents(edge);
         Mat dilated = doDilation(noise);
 
 
