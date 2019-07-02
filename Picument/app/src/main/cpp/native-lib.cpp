@@ -25,3 +25,27 @@ Java_com_hhj73_picument_MainActivity_detectEdgeJNI(JNIEnv *env, jobject instance
     Canny(outputMat, outputMat, th1, th2);
 
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_hhj73_picument_MainActivity_grayScale(JNIEnv *env, jobject instance, jlong inputImage,
+                                               jlong outputImage) {
+
+    // TODO
+    Mat &inputMat = *(Mat *) inputImage;
+    Mat &outputMat = *(Mat *) outputImage;
+
+    cvtColor(inputMat, outputMat, COLOR_RGB2GRAY);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_hhj73_picument_MainActivity_binarization(JNIEnv *env, jobject instance, jlong inputImage,
+                                                  jlong outputImage) {
+
+    // TODO
+    Mat &inputMat = *(Mat *) inputImage;
+    Mat &outputMat = *(Mat *) outputImage;
+
+    threshold(inputMat, outputMat, 127, 255, THRESH_BINARY);
+}
