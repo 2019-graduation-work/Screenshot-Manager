@@ -1,5 +1,6 @@
 #include <jni.h>
 #include <string>
+#include <opencv2/opencv.hpp>
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_hhj73_ocrtest_MainActivity_stringFromJNI(

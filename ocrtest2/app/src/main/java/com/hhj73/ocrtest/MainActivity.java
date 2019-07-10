@@ -202,13 +202,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
-
-
+    /* opencv API로 이미지 처리 */
     public void detectEdge() {
         Mat src = new Mat();
         Utils.bitmapToMat(img, src);
@@ -253,6 +247,17 @@ public class MainActivity extends AppCompatActivity {
         src.release();
         bin.release();
     }
+
+
+    /**
+     * A native method that is implemented by the 'native-lib' native library,
+     * which is packaged with this application.
+     */
+
+    public native String stringFromJNI();
+    public native void grayScale(long inputImage, long outputImage);
+    public native void binarization(long inputImage, long outputImage);
+
 
 
 }
