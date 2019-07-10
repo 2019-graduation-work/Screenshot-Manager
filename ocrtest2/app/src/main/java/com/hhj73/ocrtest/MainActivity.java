@@ -255,9 +255,5 @@ public class MainActivity extends AppCompatActivity {
      */
 
     public native String stringFromJNI();
-    public native void grayScale(long inputImage, long outputImage);
-    public native void binarization(long inputImage, long outputImage);
-
-
-
+    public native void testFunction();
 }
