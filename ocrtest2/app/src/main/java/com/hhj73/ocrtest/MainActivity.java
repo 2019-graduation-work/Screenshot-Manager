@@ -72,9 +72,10 @@ public class MainActivity extends AppCompatActivity {
         afterText.setMovementMethod(new ScrollingMovementMethod());
 
         sTess = new TessBaseAPI();
-        lang = "kor+eng";
+        lang = "kor";
         datapath = getFilesDir() + "/tesseract";
-        if(checkFile(new File(datapath+"/tessdata"))) {
+        Log.d("tess", "datapath: "+datapath);
+        if(checkFile(new File(datapath/*+"/tessdata"*/))) {
             sTess.init(datapath, lang);
         }
     }
@@ -129,21 +130,13 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+
         startActivityForResult(intent, GALLERY_CODE);
     }
 
     public void processingBtnClicked(View view) { // 이미지 처리
-        // 1. grayscale
-        Mat src = new Mat();
-        Utils.bitmapToMat(img, src);
-        Mat gray = new Mat();
-
-        grayScale(src.getNativeObjAddr(), gray.getNativeObjAddr());
-
-        // 2. binarization
         Mat bin = new Mat();
-
-        binarization(gray.getNativeObjAddr(), bin.getNativeObjAddr());
+        binarization();
 
         Utils.matToBitmap(bin, img);
         imageView.setImageBitmap(img);
@@ -201,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         edge.release();
     }
 
-    public void graysclae() {
+    public void grayscale() {
         // 회색조
         Mat src = new Mat();
         Utils.bitmapToMat(img, src);
@@ -215,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         gray.release();
     }
 
-    public void binarization_() {
+    public void binarization() {
         // 이진화
 
         // grayscale
@@ -241,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
 
     public native String stringFromJNI();
 
-    public native void detectEdgeJNI(long inputImage, long outputImage, int th1, int th2);
-    public native void grayScale(long inputImage, long outputImage);
-    public native void binarization(long inputImage, long outputImage);
+//    public native void detectEdgeJNI(long inputImage, long outputImage, int th1, int th2);
+//    public native void grayScale(long inputImage, long outputImage);
+//    public native void binarization(long inputImage, long outputImage);
 }
