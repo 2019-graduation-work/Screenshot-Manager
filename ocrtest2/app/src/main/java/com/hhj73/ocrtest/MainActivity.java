@@ -125,28 +125,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void galleryBtnClicked(View view) {
+    public void galleryBtnClicked(View view) { // 이미지 가져오기
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, GALLERY_CODE);
     }
 
-    public void cameraBtnClicked(View view) {
-        detectEdge();
+    public void processingBtnClicked(View view) { // 이미지 처리
+        // 1. grayscale
+        Mat src = new Mat();
+        Utils.bitmapToMat(img, src);
+        Mat gray = new Mat();
+
+        grayScale(src.getNativeObjAddr(), gray.getNativeObjAddr());
+
+        // 2. binarization
+        Mat bin = new Mat();
+
+        binarization(gray.getNativeObjAddr(), bin.getNativeObjAddr());
+
+        Utils.matToBitmap(bin, img);
         imageView.setImageBitmap(img);
-    }
 
-    public void processingBtnClicked(View view) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PROCESSING_CODE);
-    }
-
-    public void activityChangeBtnClicked(View view) {
-        Intent intent = new Intent(this, ProcessingActivity.class);
-        startActivity(intent);
+        // OCR
+        sTess.setImage(img);
+        String result = sTess.getUTF8Text();
+        afterText.setText(result);
     }
 
     @Override
@@ -168,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
                     in.close();
 
-//                    binarization();
                     imageView.setImageBitmap(img);
 
                     sTess.setImage(img);
@@ -180,29 +184,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
-        if(requestCode == PROCESSING_CODE) {
-            if(resultCode == RESULT_OK) {
-                try {
-                    InputStream in = getContentResolver().openInputStream(data.getData());
-                    img = BitmapFactory.decodeStream(in);
-
-                    binarization();
-
-                    sTess.setImage(img);
-                    String result = sTess.getUTF8Text();
-                    afterText.setText(result);
-
-                    imageView.setImageBitmap(img);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     /* opencv API로 이미지 처리 */
+
     public void detectEdge() {
         Mat src = new Mat();
         Utils.bitmapToMat(img, src);
@@ -230,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         gray.release();
     }
 
-    public void binarization() {
+    public void binarization_() {
         // 이진화
 
         // grayscale
@@ -255,5 +240,8 @@ public class MainActivity extends AppCompatActivity {
      */
 
     public native String stringFromJNI();
-    public native void testFunction();
+
+    public native void detectEdgeJNI(long inputImage, long outputImage, int th1, int th2);
+    public native void grayScale(long inputImage, long outputImage);
+    public native void binarization(long inputImage, long outputImage);
 }

@@ -13,6 +13,7 @@ android {
             cmake {
                 cppFlags "-frtti -fexceptions"
                 abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+                arguments "-DANDROID_STL=c++_static" //, "-DANDROID_TOOLCHAIN=clang"
             }
         }
     }
