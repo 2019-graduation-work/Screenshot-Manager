@@ -132,10 +132,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void processingBtnClicked(View view) {
+        // 1. grayscale
         Mat src = new Mat();
         Utils.bitmapToMat(img, src);
+        Mat gray = new Mat();
 
+        grayScaleJNI(src.getNativeObjAddr(), gray.getNativeObjAddr());
 
+        // 2. binarization
+        Mat bin = new Mat();
+
+        binarizationJNI(gray.getNativeObjAddr(), bin.getNativeObjAddr());
+
+        Utils.matToBitmap(bin, img);
+        imageView.setImageBitmap(img);
+
+        // OCR
+        tessBaseAPI.setImage(img);
+        String result = tessBaseAPI.getUTF8Text();
+        afterText.setText(result);
     }
 
     @Override
@@ -224,5 +239,6 @@ public class MainActivity extends AppCompatActivity {
      * which is packaged with this application.
      */
     public native String stringFromJNI();
-
+    public native void grayScaleJNI(long inputImage, long outputImage);
+    public native void binarizationJNI(long inputImage, long outputImage);
 }
