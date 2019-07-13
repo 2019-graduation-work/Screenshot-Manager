@@ -164,12 +164,16 @@ public class MainActivity extends AppCompatActivity {
 
                     img = BitmapFactory.decodeStream(in);
 
-                    int height = img.getHeight();
                     int width = img.getWidth();
+                    int height = img.getHeight();
 
-//                    img = Bitmap.createScaledBitmap(img, width/3, height/3, true);
-                    String str = width + ", " + height;
-                    Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+                    if(width > 2000 || height > 2000) { // 큰 이미지 사이즈 줄임
+                        int rate = width / 1080;
+                        img = Bitmap.createScaledBitmap(img, width/rate, height/rate, true);
+                        String str = "width: " + width/rate + ", height: "+ height/rate;
+                        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+                    }
+
                     in.close();
 
                     imageView.setImageBitmap(img);
