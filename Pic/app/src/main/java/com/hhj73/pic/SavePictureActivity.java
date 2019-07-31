@@ -43,25 +43,24 @@ public class SavePictureActivity extends AppCompatActivity {
         // 권한 설정
         checkPermissions();
 
-        galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+        galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/Screenshots";
         textView = (TextView) findViewById(R.id.textView);
-        textView.setText(galleryPath + "/Screenshots");
+        textView.setText(galleryPath);
 
         rootSD = Environment.getExternalStorageDirectory().toString();
 
-        File directory = new File(galleryPath + "/Screenshots");
-        File[] files = directory.listFiles();
-
         List<String> fileList = new ArrayList<>();
+
+        fileListView = (ListView) findViewById(R.id.fileListView);
+        fileListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, fileList));
+
+        File directory = new File(galleryPath);
+        File[] files = directory.listFiles();
 
         for(int i=0; i<files.length; i++) {
             Toast.makeText(this, files[i].getName(), Toast.LENGTH_SHORT).show();
             fileList.add(files[i].getName());
         }
-
-        fileListView = (ListView) findViewById(R.id.fileListView);
-        fileListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, fileList));
-
 
     }
 
