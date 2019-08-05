@@ -23,7 +23,6 @@ Java_com_hhj73_picument_MainActivity_detectEdgeJNI(JNIEnv *env, jobject instance
 
     cvtColor(inputMat, outputMat, COLOR_RGB2GRAY);
     Canny(outputMat, outputMat, th1, th2);
-
 }
 
 extern "C"
