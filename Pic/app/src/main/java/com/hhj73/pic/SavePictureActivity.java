@@ -1,6 +1,8 @@
 package com.hhj73.pic;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,9 +22,11 @@ import java.util.List;
 
 public class SavePictureActivity extends AppCompatActivity {
 
-    String rootSD, galleryPath;
+    String galleryPath;
     TextView textView;
     ListView fileListView;
+
+    private SharedPreferences sp;
 
     private String[] permissions = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -40,14 +44,17 @@ public class SavePictureActivity extends AppCompatActivity {
     }
 
     public void init() {
+        // 최근 처리 날짜 가져오기
+        sp = getSharedPreferences("processedDate", Activity.MODE_PRIVATE);
+        
+
         // 권한 설정
         checkPermissions();
 
-        galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/Screenshots";
+        galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Screenshots";
+
         textView = (TextView) findViewById(R.id.textView);
         textView.setText(galleryPath);
-
-        rootSD = Environment.getExternalStorageDirectory().toString();
 
         List<String> fileList = new ArrayList<>();
 
@@ -61,7 +68,6 @@ public class SavePictureActivity extends AppCompatActivity {
             Toast.makeText(this, files[i].getName(), Toast.LENGTH_SHORT).show();
             fileList.add(files[i].getName());
         }
-
     }
 
     public void btnClicked(View view) {
