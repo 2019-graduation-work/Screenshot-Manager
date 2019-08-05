@@ -1,0 +1,41 @@
+{
+  "stringTable": {
+    "0": "C:/github/graduation/ocr/Pic/app/.externalNativeBuild/cmake/release/x86",
+    "1": "--target=i686-none-linux-android21 --gcc-toolchain=C:/Users/hhj73/AppData/Local/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/hhj73/AppData/Local/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Dnative_lib_EXPORTS -IC:/github/graduation/ocr/Pic/opencv/native/jni/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++ -frtti -fexceptions -std=gnu++11 -O2 -DNDEBUG -fPIC"
+  },
+  "buildFiles": [
+    "C:\\Users\\hhj73\\AppData\\Local\\Android\\sdk\\ndk-bundle\\build\\cmake\\android.toolchain.cmake",
+    "C:\\Users\\hhj73\\AppData\\Local\\Android\\sdk\\ndk-bundle\\build\\cmake\\platforms.cmake",
+    "C:\\github\\graduation\\ocr\\Pic\\app\\src\\main\\cpp\\CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "C:\\Users\\hhj73\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\github\\graduation\\ocr\\Pic\\app\\.externalNativeBuild\\cmake\\release\\x86\" --target clean"
+  ],
+  "libraries": {
+    "native-lib-Release-x86": {
+      "buildCommand": "C:\\Users\\hhj73\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\github\\graduation\\ocr\\Pic\\app\\.externalNativeBuild\\cmake\\release\\x86\" --target native-lib",
+      "buildType": "release",
+      "toolchain": "576337151",
+      "abi": "x86",
+      "artifactName": "native-lib",
+      "files": [
+        {
+          "src": "C:\\github\\graduation\\ocr\\Pic\\app\\src\\main\\cpp\\native-lib.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "C:\\github\\graduation\\ocr\\Pic\\app\\build\\intermediates\\cmake\\release\\obj\\x86\\libnative-lib.so"
+    }
+  },
+  "toolchains": {
+    "576337151": {
+      "cppCompilerExecutable": "C:\\Users\\hhj73\\AppData\\Local\\Android\\sdk\\ndk-bundle\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

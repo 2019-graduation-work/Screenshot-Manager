@@ -1,0 +1,7 @@
+[
+{
+  "directory": "C:/github/graduation/ocr/Pic/app/.externalNativeBuild/cmake/release/x86",
+  "command": "C:\\Users\\hhj73\\AppData\\Local\\Android\\sdk\\ndk-bundle\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe --target=i686-none-linux-android21 --gcc-toolchain=C:/Users/hhj73/AppData/Local/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/hhj73/AppData/Local/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -Dnative_lib_EXPORTS -IC:/github/graduation/ocr/Pic/opencv/native/jni/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++ -frtti -fexceptions -std=gnu++11 -O2 -DNDEBUG  -fPIC   -o CMakeFiles\\native-lib.dir\\native-lib.cpp.o -c C:\\github\\graduation\\ocr\\Pic\\app\\src\\main\\cpp\\native-lib.cpp",
+  "file": "C:\\github\\graduation\\ocr\\Pic\\app\\src\\main\\cpp\\native-lib.cpp"
+}
+]
