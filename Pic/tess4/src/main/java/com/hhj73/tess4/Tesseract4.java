@@ -5,5 +5,5 @@ public class Tesseract4 {
         System.loadLibrary("tess4");
     }
 
-//    public native int tessTest(int v);
+    public native int tessTest(int v);
 }

@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-26:12
+ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-27:12
 MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\hhj73\.gradle\caches\transforms-2\files-2.1\3a8920ff98557d9bb281f94e231a008e\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\hhj73\.gradle\caches\transforms-2\files-2.1\a1aaa2dcf8260e7ebf2c49522fd33d96\AndroidManifest.xml:2:1-11:12
 MERGED from [:opencv] C:\github\graduation\ocr\Pic\opencv\build\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-11:12
@@ -33,20 +33,20 @@ MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\hhj73\.gradle\cache
 MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\hhj73\.gradle\caches\transforms-2\files-2.1\2a219751f342cdf282df88a5d3f80b80\AndroidManifest.xml:17:1-22:12
 MERGED from [android.arch.core:runtime:1.1.1] C:\Users\hhj73\.gradle\caches\transforms-2\files-2.1\ad128787dd900f042977735bbd4018c5\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:interpolator:28.0.0] C:\Users\hhj73\.gradle\caches\transforms-2\files-2.1\868054fced117ca1d9a343728b48043e\AndroidManifest.xml:17:1-22:12
-INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-26:12
+INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-27:12
 	package
 		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:3:5-28
 		INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml
 		INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml
-		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-26:12
+		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-27:12
 		INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml
 	android:versionCode
 		INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml
-		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-26:12
+		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:1-27:12
 		INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:2:11-69
@@ -59,7 +59,7 @@ ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:6:5-81
 	android:name
 		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:6:22-78
 application
-ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:8:5-24:19
+ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:8:5-25:19
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\hhj73\.gradle\caches\transforms-2\files-2.1\a1aaa2dcf8260e7ebf2c49522fd33d96\AndroidManifest.xml:9:5-20
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\hhj73\.gradle\caches\transforms-2\files-2.1\a1aaa2dcf8260e7ebf2c49522fd33d96\AndroidManifest.xml:9:5-20
 MERGED from [com.android.support:support-compat:28.0.0] C:\Users\hhj73\.gradle\caches\transforms-2\files-2.1\20aec53ddc6f201e1c086c2a8b7e1d52\AndroidManifest.xml:22:5-94
@@ -81,23 +81,23 @@ MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\hhj73\.gra
 	android:theme
 		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:14:9-40
 activity#com.hhj73.pic.SavePictureActivity
-ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:15:9-21:20
+ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:15:9-16:20
 	android:name
 		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:15:19-54
-intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:16:13-20:29
-action#android.intent.action.MAIN
-ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:17:17-69
-	android:name
-		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:17:25-66
-category#android.intent.category.LAUNCHER
-ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:19:17-77
-	android:name
-		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:19:27-74
 activity#com.hhj73.pic.MainActivity
-ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:22:9-23:20
+ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:18:9-24:20
 	android:name
-		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:22:19-47
+		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:18:19-47
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:19:13-23:29
+action#android.intent.action.MAIN
+ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:20:17-69
+	android:name
+		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:20:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:22:17-77
+	android:name
+		ADDED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml:22:27-74
 uses-sdk
 INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\github\graduation\ocr\Pic\app\src\main\AndroidManifest.xml
