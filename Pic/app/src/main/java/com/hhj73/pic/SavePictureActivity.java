@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
+import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
@@ -29,7 +30,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SavePictureActivity extends AppCompatActivity {
@@ -52,6 +58,15 @@ public class SavePictureActivity extends AppCompatActivity {
     // OCR
     TessBaseAPI tessBaseAPI;
     String lang = "kor";
+
+    // Used to load the 'native-lib' library on application startup.
+    static {
+        System.loadLibrary("native-lib");
+        if(!OpenCVLoader.initDebug()) {
+        } else {
+        }
+
+    }
 
 
     @Override
@@ -115,11 +130,18 @@ public class SavePictureActivity extends AppCompatActivity {
                 path = galleryPath + "/" + path;
 
                 Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
-                ExifInterface exif = new ExifInterface(path);
-
+                ExifInterface exif = new ExifInterface(path); // 이미지 메타데이터
                 String attrDate = exif.getAttribute(ExifInterface.TAG_DATETIME);
-                String str = "exif: " + attrDate;
-                Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+
+                // 스크린샷 이미지는 datetime 속성이 없어서 file의 속성으로 접근
+                File file = new File(path);
+                BasicFileAttributes attrs;
+                attrs = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+                FileTime time = attrs.creationTime();
+
+                String pattern = "yyyy-MM-dd HH:mm:ss";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                String creationTime = simpleDateFormat.format(new Date(time.toMillis()));
 
                 // 이미지 전처리
                 processImage(img);
@@ -144,7 +166,7 @@ public class SavePictureActivity extends AppCompatActivity {
                     Toast.makeText(this, "result: " + result, Toast.LENGTH_SHORT).show();
                     
                     // sp editor에 입력
-                    editor.putString("date", "");
+                    editor.putString("date", creationTime);
                     editor.putString("path", path);
                 }
                 catch (Exception e) {
