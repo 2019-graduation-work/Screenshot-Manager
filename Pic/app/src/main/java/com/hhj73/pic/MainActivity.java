@@ -79,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    boolean checkLanguageFile(String dir)
-    {
+    boolean checkLanguageFile(String dir) {
         File file = new File(dir);
         if(!file.exists() && file.mkdirs())
             createFiles(dir);
@@ -94,8 +93,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void createFiles(String dir)
-    {
+    private void createFiles(String dir) {
         AssetManager assetMgr = this.getAssets();
 
         InputStream inputStream = null;

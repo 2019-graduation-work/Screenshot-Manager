@@ -4,19 +4,31 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.googlecode.tesseract.android.TessBaseAPI;
+
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +46,13 @@ public class SavePictureActivity extends AppCompatActivity {
     };
     private static final int MULTIPLE_PERMISSIONS = 12345;
 
+    File[] files;
+    List<String> fileList;
+
+    // OCR
+    TessBaseAPI tessBaseAPI;
+    String lang = "kor";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,35 +63,159 @@ public class SavePictureActivity extends AppCompatActivity {
     }
 
     public void init() {
+        // 초기화
+        galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Screenshots";
+        textView = (TextView) findViewById(R.id.textView);
+        fileListView = (ListView) findViewById(R.id.fileListView);
+        fileList = new ArrayList<>();
+        fileListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, fileList));
+        File directory = new File(galleryPath);
+        files = directory.listFiles();
+//        textView.setText(galleryPath);
+        tessBaseAPI = new TessBaseAPI();
+        String dir = getFilesDir() + "/tesseract";
+        if(checkLanguageFile(dir/*+"/tessdata"*/)) {
+            tessBaseAPI.init(dir, lang);
+        }
+
+
         // 최근 처리 날짜 가져오기
         sp = getSharedPreferences("processedDate", Activity.MODE_PRIVATE);
-        
+        String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
+        Toast.makeText(this, processedDate, Toast.LENGTH_SHORT).show();
 
+        
         // 권한 설정
         checkPermissions();
 
-        galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Screenshots";
-
-        textView = (TextView) findViewById(R.id.textView);
-        textView.setText(galleryPath);
-
-        List<String> fileList = new ArrayList<>();
-
-        fileListView = (ListView) findViewById(R.id.fileListView);
-        fileListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, fileList));
-
-        File directory = new File(galleryPath);
-        File[] files = directory.listFiles();
-
         for(int i=0; i<files.length; i++) {
-            Toast.makeText(this, files[i].getName(), Toast.LENGTH_SHORT).show();
             fileList.add(files[i].getName());
+        }
+
+        try {
+            checkImage();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public void btnClicked(View view) {
+    public void checkImage() throws IOException {
+        // 최근 처리 날짜 가져오기
+        sp = getSharedPreferences("processedInfo", Activity.MODE_PRIVATE);
+        String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
+        String processedPath = sp.getString("path", "null"); // path라는 키에 저장된 값이 있는지 확인, 없으면 null
 
+        SharedPreferences.Editor editor = sp.edit();
+        // 사용법
+
+        if(processedDate.equals("null")) {
+            // 처리한 것이 없음 -> 전체 처리해야함
+            for(int i=0; i<1/*fileList.size()*/; i++) {
+                String path = fileList.get(i);
+                path = galleryPath + "/" + path;
+
+                Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
+                ExifInterface exif = new ExifInterface(path);
+
+                String attrDate = exif.getAttribute(ExifInterface.TAG_DATETIME);
+                String str = "exif: " + attrDate;
+                Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+
+                // 이미지 전처리
+                processImage(img);
+
+                // OCR 처리
+                try {
+//                    InputStream in = getContentResolver().openInputStream(data.getData());
+//                    img = BitmapFactory.decodeStream(in);
+                    Toast.makeText(this, "처리하니?", Toast.LENGTH_SHORT).show();
+                    int width = img.getWidth();
+                    int height = img.getHeight();
+
+                    if(width > 2000 || height > 2000) { // 큰 이미지 사이즈 줄임
+                        int rate = width / 1080;
+                        img = Bitmap.createScaledBitmap(img, width/rate, height/rate, true);
+                    }
+//                    in.close();
+
+                    tessBaseAPI.setImage(img);
+                    String result = tessBaseAPI.getUTF8Text();
+
+                    Toast.makeText(this, "result: " + result, Toast.LENGTH_SHORT).show();
+                    
+                    // sp editor에 입력
+                    editor.putString("date", "");
+                    editor.putString("path", path);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return;
+        }
+
+        Toast.makeText(this, "dd", Toast.LENGTH_SHORT).show();
     }
+
+    public void processImage(Bitmap img) {
+        // 1. grayscale
+        Mat src = new Mat();
+        Utils.bitmapToMat(img, src);
+        Mat gray = new Mat();
+
+        grayScaleJNI(src.getNativeObjAddr(), gray.getNativeObjAddr());
+
+        // 2. binarization
+        Mat bin = new Mat();
+
+        binarizationJNI(gray.getNativeObjAddr(), bin.getNativeObjAddr());
+
+        Utils.matToBitmap(bin, img);
+
+        // OCR
+        tessBaseAPI.setImage(img);
+        String result = tessBaseAPI.getUTF8Text();
+    }
+
+    boolean checkLanguageFile(String dir) {
+        File file = new File(dir);
+        if(!file.exists() && file.mkdirs())
+            createFiles(dir);
+        else if(file.exists()){
+            String filePath = dir + "/tessdata/" + lang + ".traineddata";
+            File langDataFile = new File(filePath);
+            if(!langDataFile.exists())
+                createFiles(dir);
+        }
+        return true;
+    }
+
+    private void createFiles(String dir) {
+        AssetManager assetMgr = this.getAssets();
+
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+
+        try {
+            inputStream = assetMgr.open("tessdata/" + lang + ".traineddata");
+
+            String destFile = dir + "/tessdata/" + lang + ".traineddata";
+
+            outputStream = new FileOutputStream(destFile);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
+            }
+            inputStream.close();
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private boolean checkPermissions() {
         int result;
@@ -116,4 +259,12 @@ public class SavePictureActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * A native method that is implemented by the 'native-lib' native library,
+     * which is packaged with this application.
+     */
+    public native void grayScaleJNI(long inputImage, long outputImage);
+    public native void binarizationJNI(long inputImage, long outputImage);
+
 }
