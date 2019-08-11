@@ -9,10 +9,7 @@ import android.widget.Toast;
 
 import com.hhj73.pic.Objects.Picture;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -76,18 +73,7 @@ public class DBHelper extends SQLiteOpenHelper {
             picture = new Picture();
             picture.setPath(cursor.getString(0));
             picture.setContents(cursor.getString(1));
-
-            String strDate = cursor.getString(2);
-            SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            try {
-                Date date = transFormat.parse(strDate);
-                picture.setDate(date);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-                picture.setDate(new Date());
-            }
-
+            picture.setDate(cursor.getString(2));
             picture.setCategory(cursor.getInt(3));
             allData.add(picture);
         }

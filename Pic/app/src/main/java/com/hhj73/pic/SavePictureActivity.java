@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
@@ -20,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
+import com.hhj73.pic.DB.DBHelper;
+import com.hhj73.pic.Objects.Picture;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -44,6 +47,8 @@ public class SavePictureActivity extends AppCompatActivity {
     TextView textView;
     ListView fileListView;
 
+    DBHelper dbHelper;
+
     private SharedPreferences sp;
 
     private String[] permissions = {
@@ -54,6 +59,7 @@ public class SavePictureActivity extends AppCompatActivity {
 
     File[] files;
     List<String> fileList;
+    List<Picture> pictures;
 
     // OCR
     TessBaseAPI tessBaseAPI;
@@ -64,47 +70,63 @@ public class SavePictureActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
         if(!OpenCVLoader.initDebug()) {
         } else {
+
         }
-
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_picture);
 
-        init();
+        try {
+            init();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void init() {
+    public void init() throws IOException {
         // 초기화
         galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Screenshots";
         textView = (TextView) findViewById(R.id.textView);
         fileListView = (ListView) findViewById(R.id.fileListView);
         fileList = new ArrayList<>();
+        pictures = new ArrayList<>();
         fileListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, fileList));
         File directory = new File(galleryPath);
         files = directory.listFiles();
 //        textView.setText(galleryPath);
+        dbHelper = new DBHelper(this, "data", null, 1);
+
         tessBaseAPI = new TessBaseAPI();
         String dir = getFilesDir() + "/tesseract";
         if(checkLanguageFile(dir/*+"/tessdata"*/)) {
             tessBaseAPI.init(dir, lang);
         }
 
-
         // 최근 처리 날짜 가져오기
         sp = getSharedPreferences("processedDate", Activity.MODE_PRIVATE);
         String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
         Toast.makeText(this, processedDate, Toast.LENGTH_SHORT).show();
 
-        
         // 권한 설정
         checkPermissions();
 
         for(int i=0; i<files.length; i++) {
-            fileList.add(files[i].getName());
+            fileList.add(files[i].getName()); // 파일 이름 저장
+            String path = galleryPath + "/" + files[i].getName();
+
+            // 스크린샷 이미지는 datetime 속성이 없어서 file의 속성으로 접근
+            BasicFileAttributes attrs;
+            attrs = Files.readAttributes(files[i].toPath(), BasicFileAttributes.class);
+            FileTime time = attrs.creationTime();
+
+            String pattern = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            String creationTime = simpleDateFormat.format(new Date(time.toMillis()));
+
+            pictures.add(new Picture(path, creationTime));
         }
 
         try {
@@ -118,30 +140,27 @@ public class SavePictureActivity extends AppCompatActivity {
         // 최근 처리 날짜 가져오기
         sp = getSharedPreferences("processedInfo", Activity.MODE_PRIVATE);
         String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
+        Toast.makeText(this, processedDate, Toast.LENGTH_SHORT).show();
+        textView.setText(processedDate);
         String processedPath = sp.getString("path", "null"); // path라는 키에 저장된 값이 있는지 확인, 없으면 null
 
         SharedPreferences.Editor editor = sp.edit();
-        // 사용법
+        editor.clear();
 
         if(processedDate.equals("null")) {
             // 처리한 것이 없음 -> 전체 처리해야함
-            for(int i=0; i<1/*fileList.size()*/; i++) {
-                String path = fileList.get(i);
-                path = galleryPath + "/" + path;
+            for(int i=0; i<1/*pictures.size()*/; i++) {
+                Picture picture = pictures.get(i);
+                String path = picture.getPath();
+//                path = galleryPath + "/" + path;
 
                 Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
-                ExifInterface exif = new ExifInterface(path); // 이미지 메타데이터
+
+                // 이미지 메타데이터 - Screenshot 아닌 다른 사진에 적용
+                ExifInterface exif = new ExifInterface(path);
                 String attrDate = exif.getAttribute(ExifInterface.TAG_DATETIME);
 
-                // 스크린샷 이미지는 datetime 속성이 없어서 file의 속성으로 접근
-                File file = new File(path);
-                BasicFileAttributes attrs;
-                attrs = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-                FileTime time = attrs.creationTime();
-
-                String pattern = "yyyy-MM-dd HH:mm:ss";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-                String creationTime = simpleDateFormat.format(new Date(time.toMillis()));
+                String creationTime = picture.getDate();
 
                 // 이미지 전처리
                 processImage(img);
@@ -150,7 +169,6 @@ public class SavePictureActivity extends AppCompatActivity {
                 try {
 //                    InputStream in = getContentResolver().openInputStream(data.getData());
 //                    img = BitmapFactory.decodeStream(in);
-                    Toast.makeText(this, "처리하니?", Toast.LENGTH_SHORT).show();
                     int width = img.getWidth();
                     int height = img.getHeight();
 
@@ -162,12 +180,14 @@ public class SavePictureActivity extends AppCompatActivity {
 
                     tessBaseAPI.setImage(img);
                     String result = tessBaseAPI.getUTF8Text();
+                    textView.setText(result);
 
-                    Toast.makeText(this, "result: " + result, Toast.LENGTH_SHORT).show();
-                    
                     // sp editor에 입력
                     editor.putString("date", creationTime);
                     editor.putString("path", path);
+
+                    // DB에 저장
+                    dbHelper.insertData(picture);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -175,8 +195,11 @@ public class SavePictureActivity extends AppCompatActivity {
             }
             return;
         }
+        else { // 처리한 내역이 있으면 그 이후부터 처리함
+            Toast.makeText(this, "처리한 내역 존재", Toast.LENGTH_SHORT).show();
+            textView.setText("처리한 내역 존재");
+        }
 
-        Toast.makeText(this, "dd", Toast.LENGTH_SHORT).show();
     }
 
     public void processImage(Bitmap img) {
