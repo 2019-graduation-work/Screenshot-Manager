@@ -5,7 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.LinearLayout;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -33,6 +34,13 @@ public class Main2Activity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.search:
                 // Do something
+                LinearLayout searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
+                if(searchLayout.getVisibility() == View.INVISIBLE) {
+                    searchLayout.setVisibility(View.VISIBLE);
+                }
+                else if(searchLayout.getVisibility() == View.VISIBLE) {
+                    searchLayout.setVisibility(View.INVISIBLE);
+                }
                 return true;
             case R.id.option :
                 // Do something
