@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
@@ -22,6 +21,7 @@ import android.widget.Toast;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 import com.hhj73.pic.DB.DBHelper;
+import com.hhj73.pic.Objects.Category;
 import com.hhj73.pic.Objects.Picture;
 
 import org.opencv.android.OpenCVLoader;
@@ -40,8 +40,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
-public class SavePictureActivity extends AppCompatActivity {
+public class LoadActivity extends AppCompatActivity {
+    ArrayList<Category> categories;
 
     String galleryPath;
     TextView textView;
@@ -77,7 +79,7 @@ public class SavePictureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_save_picture);
+        setContentView(R.layout.activity_load);
 
         try {
             init();
@@ -87,6 +89,18 @@ public class SavePictureActivity extends AppCompatActivity {
     }
 
     public void init() throws IOException {
+        // 카테고리 객체
+        categories = new ArrayList<>();
+        String[] names = {
+                "unknown", "travel", "food",
+                "discount", "finance", "school",
+                "beauty", "work", "music"
+        };
+
+        for(int i=0; i<names.length; i++) {
+            categories.add(new Category(i, names[i]));
+        }
+
         // 초기화
         galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Screenshots";
         textView = (TextView) findViewById(R.id.textView);
@@ -152,7 +166,6 @@ public class SavePictureActivity extends AppCompatActivity {
             for(int i=0; i<1/*pictures.size()*/; i++) {
                 Picture picture = pictures.get(i);
                 String path = picture.getPath();
-//                path = galleryPath + "/" + path;
 
                 Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
 
@@ -180,11 +193,18 @@ public class SavePictureActivity extends AppCompatActivity {
 
                     tessBaseAPI.setImage(img);
                     String result = tessBaseAPI.getUTF8Text();
+                    picture.setContents(result);
                     textView.setText(result);
 
                     // sp editor에 입력
                     editor.putString("date", creationTime);
                     editor.putString("path", path);
+
+                    // 분류 작업 여기에
+                    // ........ 일단 카테고리 랜덤으로
+                    Random random = new Random();
+                    int rand = random.nextInt(9); // 0~8
+                    picture.setCategory(rand);
 
                     // DB에 저장
                     dbHelper.insertData(picture);

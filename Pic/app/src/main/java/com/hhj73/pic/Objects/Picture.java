@@ -4,18 +4,14 @@ public class Picture { // 사진
     String path; // 경로
     String contents; // 추출한 contents
     String date;
-    int category = UNKNOWN;
+    int category = 0;
 
     /* categories */
-    static final int UNKNOWN = 0;
-    static final int TRAVEL = 1;
-    static final int FOOD = 2;
-    static final int DISCOUNT = 3;
-    static final int FINANCE = 4;
-    static final int SCHOOL = 5;
-    static final int BEUATY = 6;
-    static final int WORK = 7;
-    static final int MUSIC = 8;
+    static final String[] names = {
+            "unknown", "travel", "food",
+            "discount", "finance", "school",
+            "beauty", "work", "music"
+    };
 
     public Picture() {
     }

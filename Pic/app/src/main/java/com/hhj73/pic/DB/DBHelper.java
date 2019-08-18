@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sb.append(" PATH TEXT, "); // 이미지 경로
         sb.append(" CONTENTS TEXT, "); // 추출한 텍스트
         sb.append(" DATE TEXT, "); // 저장 날짜
-        sb.append(" CATEGORY TEXT ) "); // 카테고리
+        sb.append(" CATEGORY INTEGER ) "); // 카테고리
 
         // SQLite Database로 쿼리 실행
         db.execSQL(sb.toString());
@@ -42,10 +42,10 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /*
-        0: path
-        1: contents
-        2: date
-        3: category
+        0: path (TEXT)
+        1: contents (TEXT)
+        2: date (TEXT)
+        3: category (INTEGER)
      */
 
     public void insertData(Picture picture) {
@@ -54,23 +54,30 @@ public class DBHelper extends SQLiteOpenHelper {
 
         StringBuffer sb = new StringBuffer();
         sb.append(" INSERT INTO DATA ( ");
-        sb.append(" PATH, COTENTS, DATE ) "); // Category는 나중에
-        sb.append(" VALUES ( ?, ?, ? ) ");
+        sb.append(" PATH, CONTENTS, DATE, CATEGORY ) ");
+        sb.append(" VALUES ( ?, ?, ?, ? ) ");
+
+        db.execSQL(sb.toString(),
+                new Object[] {
+                        picture.getPath(),
+                        picture.getContents(),
+                        picture.getDate(),
+                        picture.getCategory()
+                });
     }
 
     public List getAllData() {
         StringBuffer sb = new StringBuffer();
-        sb.append(" SELECT _ID, NAME, AGE, PHONE FROM TEST_TABLE ");
+        sb.append(" SELECT * FROM DATA ");
 
         // 읽기 전용 DB 객체를 만든다.
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(sb.toString(), null);
         List allData = new ArrayList();
-        Picture picture  = null;
 
         // moveToNext 다음에 데이터가 있으면 true 없으면 false
         while( cursor.moveToNext() ) {
-            picture = new Picture();
+            Picture picture = new Picture();
             picture.setPath(cursor.getString(0));
             picture.setContents(cursor.getString(1));
             picture.setDate(cursor.getString(2));
@@ -80,6 +87,30 @@ public class DBHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return allData;
+    }
+
+    public List getCategoryData(int num) { // 해당 카테고리 가져오기
+        StringBuffer sb = new StringBuffer();
+        sb.append(" SELECT * FROM DATA WHERE CATEGORY = ? ");
+
+        // 읽기 전용 DB 객체를 만든다.
+        SQLiteDatabase db = getReadableDatabase();
+        String[] params = {String.valueOf(num)};
+        Cursor cursor = db.rawQuery(sb.toString(), params);
+        List data = new ArrayList();
+
+        // moveToNext 다음에 데이터가 있으면 true 없으면 false
+        while( cursor.moveToNext() ) {
+            Picture picture = new Picture();
+            picture.setPath(cursor.getString(0));
+            picture.setContents(cursor.getString(1));
+            picture.setDate(cursor.getString(2));
+            picture.setCategory(cursor.getInt(3));
+            data.add(picture);
+        }
+
+        cursor.close();
+        return data;
     }
 
 }

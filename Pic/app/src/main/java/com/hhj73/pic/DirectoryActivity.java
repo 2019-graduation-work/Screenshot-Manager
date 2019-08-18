@@ -10,21 +10,32 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.hhj73.pic.Objects.Category;
+
 public class DirectoryActivity extends AppCompatActivity {
+
+    Category category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directory);
 
+        Intent intent = getIntent();
+        int value = intent.getIntExtra("category", 1);
+        Toast.makeText(this, String.valueOf(value), Toast.LENGTH_SHORT).show();
+
         // 툴바
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.myAppName);
         setSupportActionBar(toolbar);
 
-        Intent intent = getIntent();
-        int value = intent.getIntExtra("category", 1);
-        Toast.makeText(this, String.valueOf(value), Toast.LENGTH_SHORT).show();
+        init();
+    }
+
+    public void init() {
+        // 이미지 로드
+
     }
 
     @Override

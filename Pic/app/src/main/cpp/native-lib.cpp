@@ -33,7 +33,7 @@ Java_com_hhj73_pic_MainActivity_binarizationJNI(JNIEnv *env, jobject instance, j
     threshold(inputMat, outputMat, 127, 255, THRESH_BINARY);
 }extern "C"
 JNIEXPORT void JNICALL
-Java_com_hhj73_pic_SavePictureActivity_grayScaleJNI(JNIEnv *env, jobject instance, jlong inputImage,
+Java_com_hhj73_pic_LoadActivity_grayScaleJNI(JNIEnv *env, jobject instance, jlong inputImage,
                                                     jlong outputImage) {
 
     // TODO
@@ -43,7 +43,7 @@ Java_com_hhj73_pic_SavePictureActivity_grayScaleJNI(JNIEnv *env, jobject instanc
     cvtColor(inputMat, outputMat, COLOR_RGB2GRAY);
 }extern "C"
 JNIEXPORT void JNICALL
-Java_com_hhj73_pic_SavePictureActivity_binarizationJNI(JNIEnv *env, jobject instance,
+Java_com_hhj73_pic_LoadActivity_binarizationJNI(JNIEnv *env, jobject instance,
                                                        jlong inputImage, jlong outputImage) {
 
     // TODO

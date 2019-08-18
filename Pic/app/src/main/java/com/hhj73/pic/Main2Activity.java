@@ -10,13 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.hhj73.pic.Objects.Category;
-
-import java.util.ArrayList;
-
 public class Main2Activity extends AppCompatActivity {
-
-    ArrayList<Category> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +26,6 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void init() {
-        // 카테고리 객체
-        categories = new ArrayList<>();
-        String[] names = {
-                "unknown", "travel", "food",
-                "discount", "finance", "school",
-                "beauty", "work", "music"
-        };
-
-        for(int i=0; i<names.length; i++) {
-            categories.add(new Category(i, names[i]));
-        }
-
         // layout
         LinearLayout[] directories = {
                 findViewById(R.id.unknown), findViewById(R.id.travel), findViewById(R.id.food),
