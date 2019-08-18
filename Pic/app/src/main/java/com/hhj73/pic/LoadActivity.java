@@ -119,10 +119,10 @@ public class LoadActivity extends AppCompatActivity {
             tessBaseAPI.init(dir, lang);
         }
 
-        // 최근 처리 날짜 가져오기
-        sp = getSharedPreferences("processedDate", Activity.MODE_PRIVATE);
-        String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
-        Toast.makeText(this, processedDate, Toast.LENGTH_SHORT).show();
+//        // 최근 처리 날짜 가져오기
+//        sp = getSharedPreferences("processedDate", MODE_PRIVATE);
+//        String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
+//        Toast.makeText(this, processedDate, Toast.LENGTH_SHORT).show();
 
         // 권한 설정
         checkPermissions();
@@ -152,14 +152,12 @@ public class LoadActivity extends AppCompatActivity {
 
     public void checkImage() throws IOException {
         // 최근 처리 날짜 가져오기
-        sp = getSharedPreferences("processedInfo", Activity.MODE_PRIVATE);
+        Toast.makeText(this, "최근 처리 날짜 가져오기", Toast.LENGTH_SHORT).show();
+        sp = getApplicationContext().getSharedPreferences("process", Activity.MODE_PRIVATE);
         String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
-        Toast.makeText(this, processedDate, Toast.LENGTH_SHORT).show();
-        textView.setText(processedDate);
         String processedPath = sp.getString("path", "null"); // path라는 키에 저장된 값이 있는지 확인, 없으면 null
 
         SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
 
         if(processedDate.equals("null")) {
             // 처리한 것이 없음 -> 전체 처리해야함
@@ -198,7 +196,12 @@ public class LoadActivity extends AppCompatActivity {
 
                     // sp editor에 입력
                     editor.putString("date", creationTime);
+//                    sp.edit().putString("date", creationTime);
                     editor.putString("path", path);
+//                    sp.edit().putString("path", path);
+                    editor.commit();
+                    editor.commit();
+
 
                     // 분류 작업 여기에
                     // ........ 일단 카테고리 랜덤으로
@@ -217,7 +220,8 @@ public class LoadActivity extends AppCompatActivity {
         }
         else { // 처리한 내역이 있으면 그 이후부터 처리함
             Toast.makeText(this, "처리한 내역 존재", Toast.LENGTH_SHORT).show();
-            textView.setText("처리한 내역 존재");
+//            textView.setText("처리한 내역 존재");
+            textView.setText(sp.getString("date", "null"));
         }
 
     }
