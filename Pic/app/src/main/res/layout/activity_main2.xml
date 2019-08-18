@@ -46,6 +46,7 @@
         android:layout_gravity="center">
 
         <LinearLayout
+            android:id="@+id/unknown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -54,15 +55,18 @@
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:background="@drawable/folder_icon"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                android:clickable="false"/>
             <TextView
                 android:text="기타"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/travel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -71,15 +75,18 @@
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:background="@drawable/folder_icon"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                android:clickable="false"/>
             <TextView
                 android:text="여행"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/food"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -88,15 +95,18 @@
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:background="@drawable/folder_icon"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                android:clickable="false"/>
             <TextView
                 android:text="음식"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/discount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -105,15 +115,18 @@
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:background="@drawable/folder_icon"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                android:clickable="false"/>
             <TextView
                 android:text="할인"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/finance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -122,15 +135,18 @@
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:background="@drawable/folder_icon"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                android:clickable="false"/>
             <TextView
                 android:text="금융"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/school"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -139,15 +155,18 @@
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:background="@drawable/folder_icon"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                android:clickable="false"/>
             <TextView
                 android:text="학교"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/beauty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -156,15 +175,18 @@
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:background="@drawable/folder_icon"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                android:clickable="false"/>
             <TextView
                 android:text="뷰티"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/work"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -173,14 +195,35 @@
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:background="@drawable/folder_icon"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                android:clickable="false"/>
             <TextView
                 android:text="업무"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:background="@drawable/folder_icon"
+                android:layout_margin="10dp"
+                android:clickable="false"/>
+            <TextView
+                android:text="음악"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
+        </LinearLayout>
     </GridLayout>
 
 </LinearLayout>
