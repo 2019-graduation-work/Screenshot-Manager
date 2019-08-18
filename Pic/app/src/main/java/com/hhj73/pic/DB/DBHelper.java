@@ -44,7 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /*
         0: path (TEXT)
         1: contents (TEXT)
-        2: date (TEXT)
+        2: date (TEXT) yyyy-MM-dd hh:mm:ss
         3: category (INTEGER)
      */
 

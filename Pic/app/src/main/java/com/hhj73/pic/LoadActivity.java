@@ -115,7 +115,7 @@ public class LoadActivity extends AppCompatActivity {
 
         tessBaseAPI = new TessBaseAPI();
         String dir = getFilesDir() + "/tesseract";
-        if(checkLanguageFile(dir/*+"/tessdata"*/)) {
+        if(checkLanguageFile(dir+"/tessdata")) {
             tessBaseAPI.init(dir, lang);
         }
 
