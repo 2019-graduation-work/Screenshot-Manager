@@ -7,13 +7,13 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -122,7 +122,7 @@ public class LoadActivity extends AppCompatActivity {
 
         tessBaseAPI = new TessBaseAPI();
         String dir = getFilesDir() + "/tesseract";
-        if(checkLanguageFile(dir+"/tessdata")) {
+        if(checkLanguageFile(dir/*+"/tessdata"*/)) {
             tessBaseAPI.init(dir, lang);
         }
 
@@ -154,7 +154,6 @@ public class LoadActivity extends AppCompatActivity {
             }
         });
 
-        for(Picture picture : pictures) { System.out.println(picture.getDate()); }
         adapter.notifyDataSetChanged();
         try {
             checkImage();
@@ -170,10 +169,71 @@ public class LoadActivity extends AppCompatActivity {
         String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
         String processedPath = sp.getString("path", "null"); // path라는 키에 저장된 값이 있는지 확인, 없으면 null
 
+        SharedPreferences.Editor editor = sp.edit();
 
         if(processedDate.equals("null")) {
             // 처리한 것이 없음 -> 전체 처리해야함
-            processFile(0);
+//            processFile(0);
+            for(int i=0; i<2/*pictures.size()*/; i++) {
+                Log.d(TAG, "====================");
+
+                Picture picture = pictures.get(i);
+                String path = picture.getPath();
+                Log.d(TAG, "path: " + path);
+
+
+                Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
+
+                // 이미지 메타데이터 - Screenshot 아닌 다른 사진에 적용
+//            ExifInterface exif = new ExifInterface(path);
+//            String attrDate = exif.getAttribute(ExifInterface.TAG_DATETIME);
+
+                String creationTime = picture.getDate();
+
+                // 이미지 전처리
+                processImage(img);
+
+                // OCR 처리
+                try {
+//                    InputStream in = getContentResolver().openInputStream(data.getData());
+//                    img = BitmapFactory.decodeStream(in);
+                    int width = img.getWidth();
+                    int height = img.getHeight();
+
+                    if(width > 2000 || height > 2000) { // 큰 이미지 사이즈 줄임
+                        int rate = width / 1080;
+                        img = Bitmap.createScaledBitmap(img, width/rate, height/rate, true);
+                    }
+//                    in.close();
+
+                    tessBaseAPI.setImage(img);
+                    String result = tessBaseAPI.getUTF8Text();
+                    picture.setContents(result);
+                    textView.setText(result);
+
+                    // sp editor에 입력
+                    editor.putString("date", creationTime);
+//                    sp.edit().putString("date", creationTime);
+                    editor.putString("path", path);
+//                    sp.edit().putString("path", path);
+                    editor.commit();
+                    editor.commit();
+
+                    // 분류 작업 여기에
+                    // ........ 일단 카테고리 랜덤으로
+                    Random random = new Random();
+                    int rand = random.nextInt(9); // 0~8
+                    picture.setCategory(rand);
+
+                    // DB에 저장
+                    dbHelper.insertData(picture);
+                    Log.d(TAG, "ㅇㅇ");
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
         else { // 처리한 내역이 있으면 그 이후부터 처리함
             Toast.makeText(this, "처리한 내역 존재", Toast.LENGTH_SHORT).show();
@@ -182,8 +242,72 @@ public class LoadActivity extends AppCompatActivity {
             int index = 0;
             try {
                 index = binarySearchIndex(processedDate) + 1; // 이전에 처리했던 이미지 다음 인덱스
-                Toast.makeText(this, String.valueOf(index), Toast.LENGTH_SHORT).show();
-                processFile(index);
+                for(int i=index; i<index+2/*pictures.size()*/; i++) {
+                    Log.d(TAG, "====================");
+
+                    Picture picture = pictures.get(i);
+                    String path = picture.getPath();
+                    Log.d(TAG, "path: " + path);
+
+
+                    Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
+
+                    // 이미지 메타데이터 - Screenshot 아닌 다른 사진에 적용
+//            ExifInterface exif = new ExifInterface(path);
+//            String attrDate = exif.getAttribute(ExifInterface.TAG_DATETIME);
+
+                    String creationTime = picture.getDate();
+
+                    // 이미지 전처리
+                    img = processImage(img);
+
+                    // OCR 처리
+                    try {
+                        Log.d(TAG, "OCR 처리");
+
+//                    InputStream in = getContentResolver().openInputStream(data.getData());
+//                    img = BitmapFactory.decodeStream(in);
+                        int width = img.getWidth();
+                        int height = img.getHeight();
+
+                        if(width > 2000 || height > 2000) { // 큰 이미지 사이즈 줄임
+                            int rate = width / 1080;
+                            img = Bitmap.createScaledBitmap(img, width/rate, height/rate, true);
+                        }
+//                    in.close();
+
+                        tessBaseAPI.setImage(img);
+                        String result = tessBaseAPI.getUTF8Text();
+                        Log.d(TAG, "result: "+result);
+
+                        picture.setContents(result);
+                        textView.setText(result);
+
+                        // sp editor에 입력
+                        Log.d(TAG, "sp editor에 입력"+result);
+                        editor.putString("date", creationTime);
+//                    sp.edit().putString("date", creationTime);
+                        editor.putString("path", path);
+//                    sp.edit().putString("path", path);
+                        editor.commit();
+                        editor.commit();
+
+                        // 분류 작업 여기에
+                        // ........ 일단 카테고리 랜덤으로
+                        Random random = new Random();
+                        int rand = random.nextInt(9); // 0~8
+                        picture.setCategory(rand);
+
+                        // DB에 저장
+                        dbHelper.insertData(picture);
+                        Log.d(TAG, "ㅇㅇ");
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+//                Toast.makeText(this, String.valueOf(index), Toast.LENGTH_SHORT).show();
+//                processFile(index);
 //                textView.setText(processedDate + "\n" + processedPath + "\n" + String.valueOf(index));
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -191,63 +315,9 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
-    public void processFile(int index) throws IOException {
-        SharedPreferences.Editor editor = sp.edit();
+    public void processFile(int index){
+        Log.d(TAG, "index: " + String.valueOf(index));
 
-        for(int i=index; i<5/*pictures.size()*/; i++) {
-            Picture picture = pictures.get(i);
-            String path = picture.getPath();
-
-            Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
-
-            // 이미지 메타데이터 - Screenshot 아닌 다른 사진에 적용
-            ExifInterface exif = new ExifInterface(path);
-            String attrDate = exif.getAttribute(ExifInterface.TAG_DATETIME);
-
-            String creationTime = picture.getDate();
-
-            // 이미지 전처리
-            processImage(img);
-
-            // OCR 처리
-            try {
-//                    InputStream in = getContentResolver().openInputStream(data.getData());
-//                    img = BitmapFactory.decodeStream(in);
-                int width = img.getWidth();
-                int height = img.getHeight();
-
-                if(width > 2000 || height > 2000) { // 큰 이미지 사이즈 줄임
-                    int rate = width / 1080;
-                    img = Bitmap.createScaledBitmap(img, width/rate, height/rate, true);
-                }
-//                    in.close();
-
-                tessBaseAPI.setImage(img);
-                String result = tessBaseAPI.getUTF8Text();
-                picture.setContents(result);
-                textView.setText(result);
-
-                // sp editor에 입력
-                editor.putString("date", creationTime);
-//                    sp.edit().putString("date", creationTime);
-                editor.putString("path", path);
-//                    sp.edit().putString("path", path);
-                editor.commit();
-                editor.commit();
-
-                // 분류 작업 여기에
-                // ........ 일단 카테고리 랜덤으로
-                Random random = new Random();
-                int rand = random.nextInt(9); // 0~8
-                picture.setCategory(rand);
-
-                // DB에 저장
-                dbHelper.insertData(picture);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public int binarySearchIndex(String processDate) throws ParseException {
@@ -281,7 +351,9 @@ public class LoadActivity extends AppCompatActivity {
     }
 
 
-    public void processImage(Bitmap img) {
+    public Bitmap processImage(Bitmap img) {
+        Log.d(TAG, "processImage");
+
         // 1. grayscale
         Mat src = new Mat();
         Utils.bitmapToMat(img, src);
@@ -295,10 +367,7 @@ public class LoadActivity extends AppCompatActivity {
         binarizationJNI(gray.getNativeObjAddr(), bin.getNativeObjAddr());
 
         Utils.matToBitmap(bin, img);
-
-        // OCR
-        tessBaseAPI.setImage(img);
-        String result = tessBaseAPI.getUTF8Text();
+        return img;
     }
 
     boolean checkLanguageFile(String dir) {
