@@ -36,8 +36,11 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -48,8 +51,11 @@ public class LoadActivity extends AppCompatActivity {
     String galleryPath;
     TextView textView;
     ListView fileListView;
+    ArrayAdapter adapter;
 
     DBHelper dbHelper;
+
+    private static final String TAG = "ㅎㅇ";
 
     private SharedPreferences sp;
 
@@ -102,12 +108,13 @@ public class LoadActivity extends AppCompatActivity {
         }
 
         // 초기화
-        galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Screenshots";
+        galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/sample";
         textView = (TextView) findViewById(R.id.textView);
         fileListView = (ListView) findViewById(R.id.fileListView);
         fileList = new ArrayList<>();
         pictures = new ArrayList<>();
-        fileListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, fileList));
+        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, fileList);
+        fileListView.setAdapter(adapter);
         File directory = new File(galleryPath);
         files = directory.listFiles();
 //        textView.setText(galleryPath);
@@ -119,16 +126,11 @@ public class LoadActivity extends AppCompatActivity {
             tessBaseAPI.init(dir, lang);
         }
 
-//        // 최근 처리 날짜 가져오기
-//        sp = getSharedPreferences("processedDate", MODE_PRIVATE);
-//        String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
-//        Toast.makeText(this, processedDate, Toast.LENGTH_SHORT).show();
-
         // 권한 설정
         checkPermissions();
 
         for(int i=0; i<files.length; i++) {
-            fileList.add(files[i].getName()); // 파일 이름 저장
+            //            fileList.add(files[i].getName()); // 파일 이름 저장
             String path = galleryPath + "/" + files[i].getName();
 
             // 스크린샷 이미지는 datetime 속성이 없어서 file의 속성으로 접근
@@ -140,9 +142,20 @@ public class LoadActivity extends AppCompatActivity {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             String creationTime = simpleDateFormat.format(new Date(time.toMillis()));
 
-            pictures.add(new Picture(path, creationTime));
+            Picture p = new Picture(path, creationTime);
+            pictures.add(p);
+            fileList.add(p.getPath() + "\n" + p.getDate());
         }
+        // pictures 배열 정렬
+        Collections.sort(pictures, new Comparator<Picture>() {
+            @Override
+            public int compare(Picture p1, Picture p2) {
+                return p1.getDate().compareTo(p2.getDate());
+            }
+        });
 
+        for(Picture picture : pictures) { System.out.println(picture.getDate()); }
+        adapter.notifyDataSetChanged();
         try {
             checkImage();
         } catch (IOException e) {
@@ -157,74 +170,116 @@ public class LoadActivity extends AppCompatActivity {
         String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
         String processedPath = sp.getString("path", "null"); // path라는 키에 저장된 값이 있는지 확인, 없으면 null
 
-        SharedPreferences.Editor editor = sp.edit();
 
         if(processedDate.equals("null")) {
             // 처리한 것이 없음 -> 전체 처리해야함
-            for(int i=0; i<1/*pictures.size()*/; i++) {
-                Picture picture = pictures.get(i);
-                String path = picture.getPath();
-
-                Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
-
-                // 이미지 메타데이터 - Screenshot 아닌 다른 사진에 적용
-                ExifInterface exif = new ExifInterface(path);
-                String attrDate = exif.getAttribute(ExifInterface.TAG_DATETIME);
-
-                String creationTime = picture.getDate();
-
-                // 이미지 전처리
-                processImage(img);
-
-                // OCR 처리
-                try {
-//                    InputStream in = getContentResolver().openInputStream(data.getData());
-//                    img = BitmapFactory.decodeStream(in);
-                    int width = img.getWidth();
-                    int height = img.getHeight();
-
-                    if(width > 2000 || height > 2000) { // 큰 이미지 사이즈 줄임
-                        int rate = width / 1080;
-                        img = Bitmap.createScaledBitmap(img, width/rate, height/rate, true);
-                    }
-//                    in.close();
-
-                    tessBaseAPI.setImage(img);
-                    String result = tessBaseAPI.getUTF8Text();
-                    picture.setContents(result);
-                    textView.setText(result);
-
-                    // sp editor에 입력
-                    editor.putString("date", creationTime);
-//                    sp.edit().putString("date", creationTime);
-                    editor.putString("path", path);
-//                    sp.edit().putString("path", path);
-                    editor.commit();
-                    editor.commit();
-
-
-                    // 분류 작업 여기에
-                    // ........ 일단 카테고리 랜덤으로
-                    Random random = new Random();
-                    int rand = random.nextInt(9); // 0~8
-                    picture.setCategory(rand);
-
-                    // DB에 저장
-                    dbHelper.insertData(picture);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return;
+            processFile(0);
         }
         else { // 처리한 내역이 있으면 그 이후부터 처리함
             Toast.makeText(this, "처리한 내역 존재", Toast.LENGTH_SHORT).show();
-//            textView.setText("처리한 내역 존재");
-            textView.setText(sp.getString("date", "null"));
+//            int index = getIndex(processedDate, processedPath);
+//            int index = binarySearchIndex(processedDate, 0, pictures.size());
+            int index = 0;
+            try {
+                index = binarySearchIndex(processedDate) + 1; // 이전에 처리했던 이미지 다음 인덱스
+                Toast.makeText(this, String.valueOf(index), Toast.LENGTH_SHORT).show();
+                processFile(index);
+//                textView.setText(processedDate + "\n" + processedPath + "\n" + String.valueOf(index));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-
     }
+
+    public void processFile(int index) throws IOException {
+        SharedPreferences.Editor editor = sp.edit();
+
+        for(int i=index; i<5/*pictures.size()*/; i++) {
+            Picture picture = pictures.get(i);
+            String path = picture.getPath();
+
+            Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
+
+            // 이미지 메타데이터 - Screenshot 아닌 다른 사진에 적용
+            ExifInterface exif = new ExifInterface(path);
+            String attrDate = exif.getAttribute(ExifInterface.TAG_DATETIME);
+
+            String creationTime = picture.getDate();
+
+            // 이미지 전처리
+            processImage(img);
+
+            // OCR 처리
+            try {
+//                    InputStream in = getContentResolver().openInputStream(data.getData());
+//                    img = BitmapFactory.decodeStream(in);
+                int width = img.getWidth();
+                int height = img.getHeight();
+
+                if(width > 2000 || height > 2000) { // 큰 이미지 사이즈 줄임
+                    int rate = width / 1080;
+                    img = Bitmap.createScaledBitmap(img, width/rate, height/rate, true);
+                }
+//                    in.close();
+
+                tessBaseAPI.setImage(img);
+                String result = tessBaseAPI.getUTF8Text();
+                picture.setContents(result);
+                textView.setText(result);
+
+                // sp editor에 입력
+                editor.putString("date", creationTime);
+//                    sp.edit().putString("date", creationTime);
+                editor.putString("path", path);
+//                    sp.edit().putString("path", path);
+                editor.commit();
+                editor.commit();
+
+                // 분류 작업 여기에
+                // ........ 일단 카테고리 랜덤으로
+                Random random = new Random();
+                int rand = random.nextInt(9); // 0~8
+                picture.setCategory(rand);
+
+                // DB에 저장
+                dbHelper.insertData(picture);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public int binarySearchIndex(String processDate) throws ParseException {
+        int l = 0;
+        int r = pictures.size();
+        int m = (l + r) / 2;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        while(r >= l) {
+            m = (l + r) / 2;
+
+            Date mDate = df.parse(pictures.get(m).getDate());
+            Date pDate = df.parse(processDate);
+
+            if (mDate.compareTo(pDate) > 0) {
+                // mDate가 pDate 이후
+                r = m - 1;
+            }
+            else if (mDate.compareTo(pDate) < 0) {
+                // mDate가 pDate 이전
+                l = m + 1;
+            }
+            else if (pictures.get(m).getDate().equals(processDate)) {
+                return m;
+            }
+            else {
+                return m;
+            }
+        }
+        return m;
+    }
+
 
     public void processImage(Bitmap img) {
         // 1. grayscale

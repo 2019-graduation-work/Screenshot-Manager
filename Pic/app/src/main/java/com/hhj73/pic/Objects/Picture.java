@@ -1,6 +1,6 @@
 package com.hhj73.pic.Objects;
 
-public class Picture { // 사진
+public class Picture /*implements Comparable<Picture>*/ { // 사진
     String path; // 경로
     String contents; // 추출한 contents
     String date;
@@ -52,4 +52,22 @@ public class Picture { // 사진
     public void setCategory(int category) {
         this.category = category;
     }
+
+//    @Override
+//    public int compareTo(@NonNull Picture p) {
+//
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        try {
+//            Date thisDate = df.parse(this.date);
+//            Date pDate = df.parse(p.getDate());
+//
+//            // 자신이 크면 양수, 작으면 음수 리턴
+//            return thisDate.compareTo(pDate);
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        return 0;
+//    }
+
 }
