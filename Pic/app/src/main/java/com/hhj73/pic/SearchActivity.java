@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -89,13 +90,22 @@ public class SearchActivity extends AppCompatActivity {
 
             if(file.exists()) { // 파일 있으면
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-//                Bitmap bitmap = BitmapFactory.decodeFile();
                 imageView.setImageBitmap(bitmap);
             }
             else { // 파일 없으면
                 imageView.setBackgroundResource(R.drawable.not_found);
             }
 
+            // 클릭하면 상세보기
+            final int index = i;
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent1 = new Intent(getApplicationContext(), ImageViewActivity.class);
+                    intent1.putExtra("picture", result.get(index));
+                    startActivity(intent1);
+                }
+            });
             gridLayout.addView(imageView);
         }
     }

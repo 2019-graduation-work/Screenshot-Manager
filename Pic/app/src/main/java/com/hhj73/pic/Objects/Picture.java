@@ -1,6 +1,8 @@
 package com.hhj73.pic.Objects;
 
-public class Picture /*implements Comparable<Picture>*/ { // 사진
+import java.io.Serializable;
+
+public class Picture /*implements Comparable<Picture>*/ implements Serializable { // 사진
     String path; // 경로
     String contents; // 추출한 contents
     String date;
