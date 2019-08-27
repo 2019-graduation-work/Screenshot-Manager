@@ -7,7 +7,7 @@ public class Picture /*implements Comparable<Picture>*/ { // 사진
     int category = 0;
 
     /* categories */
-    static final String[] names = {
+    public static final String[] names = {
             "unknown", "travel", "food",
             "discount", "finance", "school",
             "beauty", "work", "music"

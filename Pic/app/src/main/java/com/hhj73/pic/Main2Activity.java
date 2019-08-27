@@ -17,12 +17,15 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        initToolbar();
+        init();
+    }
+
+    public void initToolbar() {
         // 툴바
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.myAppName);
         setSupportActionBar(toolbar);
-
-        init();
     }
 
     public void init() {

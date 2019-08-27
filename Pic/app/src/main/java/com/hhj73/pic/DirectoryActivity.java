@@ -8,12 +8,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.hhj73.pic.Objects.Category;
+import com.hhj73.pic.Objects.Picture;
 
 public class DirectoryActivity extends AppCompatActivity {
 
+    int value;
     Category category;
 
     @Override
@@ -21,19 +23,23 @@ public class DirectoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directory);
 
-        Intent intent = getIntent();
-        int value = intent.getIntExtra("category", 1);
-        Toast.makeText(this, String.valueOf(value), Toast.LENGTH_SHORT).show();
+        initToolbar();
+        init();
+    }
 
+    public void initToolbar() {
         // 툴바
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.myAppName);
         setSupportActionBar(toolbar);
-
-        init();
     }
 
     public void init() {
+        Intent intent = getIntent();
+        value = intent.getIntExtra("category", 1);
+
+        TextView textView = (TextView) findViewById(R.id.textView);
+        textView.setText(Picture.names[value]);
         // 이미지 로드
 
     }
