@@ -174,7 +174,7 @@ public class LoadActivity extends AppCompatActivity {
         if(processedDate.equals("null")) {
             // 처리한 것이 없음 -> 전체 처리해야함
 //            processFile(0);
-            for(int i=0; i<2/*pictures.size()*/; i++) {
+            for(int i=0; i<5/*pictures.size()*/; i++) {
                 Log.d(TAG, "====================");
 
                 Picture picture = pictures.get(i);
@@ -237,12 +237,13 @@ public class LoadActivity extends AppCompatActivity {
         }
         else { // 처리한 내역이 있으면 그 이후부터 처리함
             Toast.makeText(this, "처리한 내역 존재", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "처리한 내역 존재");
 //            int index = getIndex(processedDate, processedPath);
 //            int index = binarySearchIndex(processedDate, 0, pictures.size());
             int index = 0;
             try {
                 index = binarySearchIndex(processedDate) + 1; // 이전에 처리했던 이미지 다음 인덱스
-                for(int i=index; i<index+2/*pictures.size()*/; i++) {
+                for(int i=index; i<index+5/*pictures.size()*/; i++) {
                     Log.d(TAG, "====================");
 
                     Picture picture = pictures.get(i);

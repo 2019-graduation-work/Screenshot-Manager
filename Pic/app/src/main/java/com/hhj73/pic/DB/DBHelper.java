@@ -42,10 +42,11 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /*
-        0: path (TEXT)
-        1: contents (TEXT)
-        2: date (TEXT) yyyy-MM-dd hh:mm:ss
-        3: category (INTEGER)
+        0: _id (INTEGER)
+        1: path (TEXT)
+        2: contents (TEXT)
+        3: date (TEXT) yyyy-MM-dd hh:mm:ss
+        4: category (INTEGER)
      */
 
     public void insertData(Picture picture) {
@@ -78,10 +79,10 @@ public class DBHelper extends SQLiteOpenHelper {
         // moveToNext 다음에 데이터가 있으면 true 없으면 false
         while( cursor.moveToNext() ) {
             Picture picture = new Picture();
-            picture.setPath(cursor.getString(0));
-            picture.setContents(cursor.getString(1));
-            picture.setDate(cursor.getString(2));
-            picture.setCategory(cursor.getInt(3));
+            picture.setPath(cursor.getString(1));
+            picture.setContents(cursor.getString(2));
+            picture.setDate(cursor.getString(3));
+            picture.setCategory(cursor.getInt(4));
             allData.add(picture);
         }
 
@@ -102,10 +103,34 @@ public class DBHelper extends SQLiteOpenHelper {
         // moveToNext 다음에 데이터가 있으면 true 없으면 false
         while( cursor.moveToNext() ) {
             Picture picture = new Picture();
-            picture.setPath(cursor.getString(0));
-            picture.setContents(cursor.getString(1));
-            picture.setDate(cursor.getString(2));
-            picture.setCategory(cursor.getInt(3));
+            picture.setPath(cursor.getString(1));
+            picture.setContents(cursor.getString(2));
+            picture.setDate(cursor.getString(3));
+            picture.setCategory(cursor.getInt(4));
+            data.add(picture);
+        }
+
+        cursor.close();
+        return data;
+    }
+
+    public List getSearchingData(String input) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(" SELECT * FROM DATA WHERE CONTENTS LIKE ?");
+
+        // 읽기 전용 DB 객체를 만든다.
+        SQLiteDatabase db = getReadableDatabase();
+        String[] params = {"%" + input + "%"};
+        Cursor cursor = db.rawQuery(sb.toString(), params);
+        List data = new ArrayList();
+
+        // moveToNext 다음에 데이터가 있으면 true 없으면 false
+        while( cursor.moveToNext() ) {
+            Picture picture = new Picture();
+            picture.setPath(cursor.getString(1));
+            picture.setContents(cursor.getString(2));
+            picture.setDate(cursor.getString(3));
+            picture.setCategory(cursor.getInt(4));
             data.add(picture);
         }
 

@@ -36,6 +36,16 @@
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:rowCount="4"
+        android:columnCount="3"
+        android:layout_gravity="center">
+    </GridLayout>
+
 
 
 </LinearLayout>
