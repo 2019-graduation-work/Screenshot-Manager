@@ -243,10 +243,13 @@ public class LoadActivity extends AppCompatActivity {
             int index = 0;
             try {
                 index = binarySearchIndex(processedDate) + 1; // 이전에 처리했던 이미지 다음 인덱스
-                for(int i=index; i<index+5/*pictures.size()*/; i++) {
+                for(int i=index; i<pictures.size(); i++) {
                     Log.d(TAG, "====================");
 
                     Picture picture = pictures.get(i);
+                    if(picture == null )
+                        break;
+
                     String path = picture.getPath();
                     Log.d(TAG, "path: " + path);
 

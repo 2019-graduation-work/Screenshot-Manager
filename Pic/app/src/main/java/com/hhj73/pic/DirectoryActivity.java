@@ -1,6 +1,8 @@
 package com.hhj73.pic;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,18 +10,30 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hhj73.pic.DB.DBHelper;
 import com.hhj73.pic.Objects.Category;
 import com.hhj73.pic.Objects.Picture;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class DirectoryActivity extends AppCompatActivity {
 
     int value;
+    String categoryName;
     Category category;
+
+    DBHelper dbHelper;
+    ArrayList<Picture> pictures;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +71,52 @@ public class DirectoryActivity extends AppCompatActivity {
 
     public void init() {
         Intent intent = getIntent();
-        value = intent.getIntExtra("category", 1);
+        value = intent.getIntExtra("category", 0);
+        categoryName = Picture.names[value];
+        Toast.makeText(this, categoryName, Toast.LENGTH_SHORT).show();
 
-        TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setText(Picture.names[value]);
         // 이미지 로드
+        dbHelper = new DBHelper(this, "data", null, 1);
+        pictures = (ArrayList<Picture>) dbHelper.getCategoryData(value);
 
+        // 레이아웃 동적으로 생성
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
+        int total = pictures.size();
+        int col = 3;
+        int row = total / col + 1;
+        gridLayout.setColumnCount(col);
+        gridLayout.setRowCount(row);
+
+        for(int i=0, c=0, r=0; i<pictures.size(); i++, c++) {
+            if(c == col) {
+                c = 0;
+                r++;
+            }
+
+            File file = new File(pictures.get(i).getPath());
+            ImageView imageView = new ImageView(this);
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
+
+            if(file.exists()) { // 파일 있으면
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                imageView.setImageBitmap(bitmap);
+            }
+            else { // 파일 없으면
+                imageView.setBackgroundResource(R.drawable.not_found);
+            }
+
+            // 클릭하면 상세보기
+            final int index = i;
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent1 = new Intent(getApplicationContext(), ImageViewActivity.class);
+                    intent1.putExtra("picture", pictures.get(index));
+                    startActivity(intent1);
+                }
+            });
+            gridLayout.addView(imageView);
+        }
     }
 
     @Override
