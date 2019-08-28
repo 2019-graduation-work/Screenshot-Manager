@@ -83,7 +83,6 @@ public class Main2Activity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,11 +90,24 @@ public class Main2Activity extends AppCompatActivity {
 
         initToolbar();
         init();
-        try {
-            loadInit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            loadInit();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    loadInit();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
     }
 
     public void loadInit() throws IOException {
@@ -112,9 +124,6 @@ public class Main2Activity extends AppCompatActivity {
         if(checkLanguageFile(dir/*+"/tessdata"*/)) {
             tessBaseAPI.init(dir, lang);
         }
-
-        // 권한 설정
-        checkPermissions();
 
         for(int i=0; i<files.length; i++) {
             //            fileList.add(files[i].getName()); // 파일 이름 저장
@@ -150,7 +159,6 @@ public class Main2Activity extends AppCompatActivity {
 
     public void checkImage() throws IOException {
         // 최근 처리 날짜 가져오기
-        Toast.makeText(this, "최근 처리 날짜 가져오기", Toast.LENGTH_SHORT).show();
         sp = getApplicationContext().getSharedPreferences("process", Activity.MODE_PRIVATE);
         String processedDate = sp.getString("date", "null"); // date라는 키에 저장된 값이 있는지 확인, 없으면 null
         String processedPath = sp.getString("path", "null"); // path라는 키에 저장된 값이 있는지 확인, 없으면 null
@@ -166,7 +174,6 @@ public class Main2Activity extends AppCompatActivity {
                 Picture picture = pictures.get(i);
                 String path = picture.getPath();
                 Log.d(TAG, "path: " + path);
-
 
                 Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
 
@@ -221,7 +228,6 @@ public class Main2Activity extends AppCompatActivity {
 
         }
         else { // 처리한 내역이 있으면 그 이후부터 처리함
-            Toast.makeText(this, "처리한 내역 존재", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "처리한 내역 존재");
 //            int index = getIndex(processedDate, processedPath);
 //            int index = binarySearchIndex(processedDate, 0, pictures.size());
@@ -237,7 +243,6 @@ public class Main2Activity extends AppCompatActivity {
 
                     String path = picture.getPath();
                     Log.d(TAG, "path: " + path);
-
 
                     Bitmap img = BitmapFactory.decodeFile(path); // 이미지 가져오기
 
@@ -294,9 +299,6 @@ public class Main2Activity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-//                Toast.makeText(this, String.valueOf(index), Toast.LENGTH_SHORT).show();
-//                processFile(index);
-//                textView.setText(processedDate + "\n" + processedPath + "\n" + String.valueOf(index));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -329,6 +331,9 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void init() {
+        // 권한 설정
+        checkPermissions();
+
         // layout
         LinearLayout[] directories = {
                 findViewById(R.id.unknown), findViewById(R.id.travel), findViewById(R.id.food),
@@ -558,6 +563,7 @@ public class Main2Activity extends AppCompatActivity {
             }
         }
     }
+
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
