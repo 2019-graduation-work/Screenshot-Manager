@@ -319,11 +319,6 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
-    public void processFile(int index){
-        Log.d(TAG, "index: " + String.valueOf(index));
-
-    }
-
     public int binarySearchIndex(String processDate) throws ParseException {
         int l = 0;
         int r = pictures.size();
