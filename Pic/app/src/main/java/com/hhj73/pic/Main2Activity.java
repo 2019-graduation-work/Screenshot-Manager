@@ -336,42 +336,58 @@ public class Main2Activity extends AppCompatActivity {
 
         // layout
         LinearLayout[] directories = {
-                findViewById(R.id.unknown), findViewById(R.id.travel), findViewById(R.id.food),
-                findViewById(R.id.discount), findViewById(R.id.finance), findViewById(R.id.school),
-                findViewById(R.id.beauty), findViewById(R.id.work), findViewById(R.id.music)
+                findViewById(R.id.unknown),
+                findViewById(R.id.food), findViewById(R.id.restaurant), findViewById(R.id.recipe), findViewById(R.id.cafe),
+                findViewById(R.id.cosmetic), findViewById(R.id.cosmetic_discount), findViewById(R.id.skincare), findViewById(R.id.color),
+                findViewById(R.id.travel), findViewById(R.id.place), findViewById(R.id.exchange), findViewById(R.id.travel_discount), findViewById(R.id.transport)
         };
 
         View.OnClickListener listner = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.unknown: // 0. unknown
+                    case R.id.unknown: // 00. unknown
                         Toast.makeText(Main2Activity.this, "0", Toast.LENGTH_SHORT).show();
-                        switchActivity(0);
+                        switchActivity(00);
                         break;
-                    case R.id.travel: // 1. travel
-                        switchActivity(1);
+                    case R.id.food: // 10
+                        switchActivity(10);
                         break;
-                    case R.id.food: // 2. food
-                        switchActivity(2);
+                    case R.id.restaurant: // 11
+                        switchActivity(11);
                         break;
-                    case R.id.discount: // 3. discount
-                        switchActivity(3);
+                    case R.id.recipe: // 12
+                        switchActivity(12);
                         break;
-                    case R.id.finance: // 4. finance
-                        switchActivity(4);
+                    case R.id.cafe: // 13
+                        switchActivity(13);
                         break;
-                    case R.id.school: // 5. school
-                        switchActivity(5);
+                    case R.id.cosmetic: // 20
+                        switchActivity(20);
                         break;
-                    case R.id.beauty: // 6. beauty
-                        switchActivity(6);
+                    case R.id.cosmetic_discount: // 21
+                        switchActivity(21);
                         break;
-                    case R.id.work: // 7. work
-                        switchActivity(7);
+                    case R.id.skincare: // 22
+                        switchActivity(22);
                         break;
-                    case R.id.music: // 8. music
-                        switchActivity(8);
+                    case R.id.color: // 23
+                        switchActivity(23);
+                        break;
+                    case R.id.travel: // 30
+                        switchActivity(30);
+                        break;
+                    case R.id.place: // 31
+                        switchActivity(31);
+                        break;
+                    case R.id.exchange: // 32
+                        switchActivity(32);
+                        break;
+                    case R.id.travel_discount: // 33
+                        switchActivity(33);
+                        break;
+                    case R.id.transport: // 34
+                        switchActivity(34);
                         break;
                 }
             }
@@ -415,15 +431,10 @@ public class Main2Activity extends AppCompatActivity {
     public void switchActivity(int value) {
         Toast.makeText(this, "switch"+value, Toast.LENGTH_SHORT).show();
         /*
-        static final int UNKNOWN = 0;
-        static final int TRAVEL = 1;
-        static final int FOOD = 2;
-        static final int DISCOUNT = 3;
-        static final int FINANCE = 4;
-        static final int SCHOOL = 5;
-        static final int BEUATY = 6;
-        static final int WORK = 7;
-        static final int MUSIC = 8;
+        기타 00
+        음식 10 (맛집 11, 레시피 12, 카페 13)
+        화장품 20 (할인 21, 기초 22, 색조 23)
+        여행 30 (관광지 31, 환전 32, 할인 33, 교통 34)
          */
 
         Intent intent = new Intent(this, DirectoryActivity.class);

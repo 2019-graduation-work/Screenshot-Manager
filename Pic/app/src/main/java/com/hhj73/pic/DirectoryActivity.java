@@ -72,7 +72,12 @@ public class DirectoryActivity extends AppCompatActivity {
     public void init() {
         Intent intent = getIntent();
         value = intent.getIntExtra("category", 0);
-        categoryName = Picture.names[value];
+
+        int main = value/10; // 대분류 (10의 자리)
+        int sub = value%10; // 소분류 (1의 자리)
+//        categoryName = Picture.names[value];
+
+        categoryName = Picture.names[main][sub];
         Toast.makeText(this, categoryName, Toast.LENGTH_SHORT).show();
 
         // 이미지 로드

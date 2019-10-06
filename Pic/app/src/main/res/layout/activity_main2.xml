@@ -66,26 +66,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/travel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_columnWeight="1"
-                android:background="@drawable/folder_icon"
-                android:layout_margin="10dp"
-                android:clickable="false"/>
-            <TextView
-                android:text="여행"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"/>
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/food"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -106,7 +86,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/discount"
+            android:id="@+id/restaurant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -118,7 +98,7 @@
                 android:layout_margin="10dp"
                 android:clickable="false"/>
             <TextView
-                android:text="할인"
+                android:text="맛집"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -126,7 +106,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/finance"
+            android:id="@+id/recipe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -138,7 +118,7 @@
                 android:layout_margin="10dp"
                 android:clickable="false"/>
             <TextView
-                android:text="금융"
+                android:text="레시피"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -146,7 +126,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/school"
+            android:id="@+id/cafe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -158,7 +138,7 @@
                 android:layout_margin="10dp"
                 android:clickable="false"/>
             <TextView
-                android:text="학교"
+                android:text="카페"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -166,7 +146,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/beauty"
+            android:id="@+id/cosmetic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -178,7 +158,7 @@
                 android:layout_margin="10dp"
                 android:clickable="false"/>
             <TextView
-                android:text="뷰티"
+                android:text="화장품"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -186,7 +166,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/work"
+            android:id="@+id/cosmetic_discount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -198,7 +178,7 @@
                 android:layout_margin="10dp"
                 android:clickable="false"/>
             <TextView
-                android:text="업무"
+                android:text="화장품 할인"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -206,7 +186,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/music"
+            android:id="@+id/skincare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -218,12 +198,133 @@
                 android:layout_margin="10dp"
                 android:clickable="false"/>
             <TextView
-                android:text="음악"
+                android:text="기초"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:background="@drawable/folder_icon"
+                android:layout_margin="10dp"
+                android:clickable="false"/>
+            <TextView
+                android:text="색조"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/travel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:background="@drawable/folder_icon"
+                android:layout_margin="10dp"
+                android:clickable="false"/>
+            <TextView
+                android:text="여행"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:background="@drawable/folder_icon"
+                android:layout_margin="10dp"
+                android:clickable="false"/>
+            <TextView
+                android:text="관광지"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/exchange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:background="@drawable/folder_icon"
+                android:layout_margin="10dp"
+                android:clickable="false"/>
+            <TextView
+                android:text="환전"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/travel_discount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:background="@drawable/folder_icon"
+                android:layout_margin="10dp"
+                android:clickable="false"/>
+            <TextView
+                android:text="여행 할인"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/transport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:background="@drawable/folder_icon"
+                android:layout_margin="10dp"
+                android:clickable="false"/>
+            <TextView
+                android:text="교통"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
+        </LinearLayout>
+
     </GridLayout>
 
 </LinearLayout>

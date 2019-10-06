@@ -9,10 +9,17 @@ public class Picture /*implements Comparable<Picture>*/ implements Serializable 
     int category = 0;
 
     /* categories */
-    public static final String[] names = {
-            "unknown", "travel", "food",
-            "discount", "finance", "school",
-            "beauty", "work", "music"
+//    public static final String[] names = {
+//            "unknown", "travel", "food",
+//            "discount", "finance", "school",
+//            "beauty", "work", "music"
+//    };
+
+    public static final String[][] names = {
+            {"unknown"},
+            {"food", "restaurant", "recipe", "cafe"},
+            {"cosmetic", "discount", "skincare", "color"},
+            {"travel", "place", "exchange", "discount", "transport"}
     };
 
     public Picture() {
