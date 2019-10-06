@@ -33,7 +33,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // SQLite Database로 쿼리 실행
         db.execSQL(sb.toString());
-        Toast.makeText(context, "Table 생성완료", Toast.LENGTH_SHORT).show();
+
+        // 카테고리로 가져오는 인덱스
+        db.execSQL("CREATE INDEX IF NOT EXISTS DATA_CATEGORY ON DATA(_ID, PATH, CONTENTS, DATE, CATEGORY)");
+        Toast.makeText(context, "모든 게 마음먹기 달렸어..", Toast.LENGTH_SHORT).show();
     }
 
     @Override
