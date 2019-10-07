@@ -22,6 +22,13 @@ public class Picture /*implements Comparable<Picture>*/ implements Serializable 
             {"travel", "place", "exchange", "discount", "transport"}
     };
 
+    public static final String[][] names_kor = {
+            {"기타"},
+            {"음식", "맛집", "레시피", "카페/디저트"},
+            {"화장품", "할인", "기초", "색조"},
+            {"여행", "관광지", "환전", "할인", "교통"}
+    };
+
     public Picture() {
     }
 

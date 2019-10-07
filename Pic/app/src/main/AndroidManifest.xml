@@ -12,10 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".SubCategoryActivity"></activity>
+        <activity android:name=".SearchActivity" />
         <activity android:name=".ImageViewActivity" />
-        <activity android:name=".DirectoryActivity">
-        </activity>
+        <activity android:name=".DirectoryActivity" />
         <activity android:name=".Main2Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoadActivity">
-        </activity>
+        <activity android:name=".LoadActivity" />
         <activity android:name=".MainActivity" />
     </application>
 

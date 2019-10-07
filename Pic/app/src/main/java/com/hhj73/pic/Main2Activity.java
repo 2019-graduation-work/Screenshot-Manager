@@ -337,9 +337,9 @@ public class Main2Activity extends AppCompatActivity {
         // layout
         LinearLayout[] directories = {
                 findViewById(R.id.unknown),
-                findViewById(R.id.food), findViewById(R.id.restaurant), findViewById(R.id.recipe), findViewById(R.id.cafe),
-                findViewById(R.id.cosmetic), findViewById(R.id.cosmetic_discount), findViewById(R.id.skincare), findViewById(R.id.color),
-                findViewById(R.id.travel), findViewById(R.id.place), findViewById(R.id.exchange), findViewById(R.id.travel_discount), findViewById(R.id.transport)
+                findViewById(R.id.food), /* findViewById(R.id.restaurant), findViewById(R.id.recipe), findViewById(R.id.cafe),*/
+                findViewById(R.id.cosmetic), /*findViewById(R.id.cosmetic_discount), findViewById(R.id.skincare), findViewById(R.id.color),*/
+                findViewById(R.id.travel)/*, findViewById(R.id.place), findViewById(R.id.exchange), findViewById(R.id.travel_discount), findViewById(R.id.transport)*/
         };
 
         View.OnClickListener listner = new View.OnClickListener() {
@@ -353,42 +353,42 @@ public class Main2Activity extends AppCompatActivity {
                     case R.id.food: // 10
                         switchActivity(10);
                         break;
-                    case R.id.restaurant: // 11
-                        switchActivity(11);
-                        break;
-                    case R.id.recipe: // 12
-                        switchActivity(12);
-                        break;
-                    case R.id.cafe: // 13
-                        switchActivity(13);
-                        break;
+//                    case R.id.restaurant: // 11
+//                        switchActivity(11);
+//                        break;
+//                    case R.id.recipe: // 12
+//                        switchActivity(12);
+//                        break;
+//                    case R.id.cafe: // 13
+//                        switchActivity(13);
+//                        break;
                     case R.id.cosmetic: // 20
                         switchActivity(20);
                         break;
-                    case R.id.cosmetic_discount: // 21
-                        switchActivity(21);
-                        break;
-                    case R.id.skincare: // 22
-                        switchActivity(22);
-                        break;
-                    case R.id.color: // 23
-                        switchActivity(23);
-                        break;
+//                    case R.id.cosmetic_discount: // 21
+//                        switchActivity(21);
+//                        break;
+//                    case R.id.skincare: // 22
+//                        switchActivity(22);
+//                        break;
+//                    case R.id.color: // 23
+//                        switchActivity(23);
+//                        break;
                     case R.id.travel: // 30
                         switchActivity(30);
                         break;
-                    case R.id.place: // 31
-                        switchActivity(31);
-                        break;
-                    case R.id.exchange: // 32
-                        switchActivity(32);
-                        break;
-                    case R.id.travel_discount: // 33
-                        switchActivity(33);
-                        break;
-                    case R.id.transport: // 34
-                        switchActivity(34);
-                        break;
+//                    case R.id.place: // 31
+//                        switchActivity(31);
+//                        break;
+//                    case R.id.exchange: // 32
+//                        switchActivity(32);
+//                        break;
+//                    case R.id.travel_discount: // 33
+//                        switchActivity(33);
+//                        break;
+//                    case R.id.transport: // 34
+//                        switchActivity(34);
+//                        break;
                 }
             }
         };
@@ -429,7 +429,6 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void switchActivity(int value) {
-        Toast.makeText(this, "switch"+value, Toast.LENGTH_SHORT).show();
         /*
         기타 00
         음식 10 (맛집 11, 레시피 12, 카페 13)
@@ -437,7 +436,8 @@ public class Main2Activity extends AppCompatActivity {
         여행 30 (관광지 31, 환전 32, 할인 33, 교통 34)
          */
 
-        Intent intent = new Intent(this, DirectoryActivity.class);
+//        Intent intent = new Intent(this, DirectoryActivity.class);
+        Intent intent = new Intent(this, SubCategoryActivity.class);
         intent.putExtra("category", value);
         startActivity(intent);
     }

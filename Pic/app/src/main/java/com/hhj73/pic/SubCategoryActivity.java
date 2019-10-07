@@ -1,21 +1,16 @@
 package com.hhj73.pic;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,11 +19,9 @@ import com.hhj73.pic.DB.DBHelper;
 import com.hhj73.pic.Objects.Category;
 import com.hhj73.pic.Objects.Picture;
 
-import java.io.File;
 import java.util.ArrayList;
 
-public class DirectoryActivity extends AppCompatActivity {
-
+public class SubCategoryActivity extends AppCompatActivity {
     int value;
     String categoryName;
     Category category;
@@ -36,12 +29,10 @@ public class DirectoryActivity extends AppCompatActivity {
     DBHelper dbHelper;
     ArrayList<Picture> pictures;
 
-    String TAG = "꽥꽥";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_directory);
+        setContentView(R.layout.activity_sub_category);
 
         initToolbar();
         init();
@@ -72,64 +63,6 @@ public class DirectoryActivity extends AppCompatActivity {
         });
     }
 
-    public void init() {
-        Intent intent = getIntent();
-        value = intent.getIntExtra("category", 0);
-
-        Log.d(TAG, "value: "+String.valueOf(value));
-        int main = value/10; // 대분류 (10의 자리)
-        int sub = value%10; // 소분류 (1의 자리)
-//        categoryName = Picture.names[value];
-        Log.d(TAG, "main: "+String.valueOf(main));
-        Log.d(TAG, "sub: "+String.valueOf(sub));
-
-        categoryName = Picture.names[main][sub];
-        Toast.makeText(this, categoryName, Toast.LENGTH_SHORT).show();
-
-        // 이미지 로드
-        dbHelper = new DBHelper(this, "data", null, 1);
-        pictures = (ArrayList<Picture>) dbHelper.getCategoryData(value);
-
-        // 레이아웃 동적으로 생성
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
-        int total = pictures.size();
-        int col = 3;
-        int row = total / col + 1;
-        gridLayout.setColumnCount(col);
-        gridLayout.setRowCount(row);
-
-        for(int i=0, c=0, r=0; i<pictures.size(); i++, c++) {
-            if(c == col) {
-                c = 0;
-                r++;
-            }
-
-            File file = new File(pictures.get(i).getPath());
-            ImageView imageView = new ImageView(this);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
-
-            if(file.exists()) { // 파일 있으면
-                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                imageView.setImageBitmap(bitmap);
-            }
-            else { // 파일 없으면
-                imageView.setBackgroundResource(R.drawable.not_found);
-            }
-
-            // 클릭하면 상세보기
-            final int index = i;
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent1 = new Intent(getApplicationContext(), ImageViewActivity.class);
-                    intent1.putExtra("picture", pictures.get(index));
-                    startActivity(intent1);
-                }
-            });
-            gridLayout.addView(imageView);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 //        return super.onCreateOptionsMenu(toolbar_menu);
@@ -158,5 +91,73 @@ public class DirectoryActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void init() {
+        Intent intent = getIntent();
+        value = intent.getIntExtra("category", 0);
+
+        final int main = value/10; // 대분류 (10의 자리)
+
+        categoryName = Picture.names[main][0]; // 대분류
+        Toast.makeText(this, categoryName, Toast.LENGTH_SHORT).show();
+
+        // 레이아웃 동적으로 생성
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
+        int total = Picture.names[main].length; // 소분류 개수
+        int col = 3;
+        int row = total / col + 1;
+        gridLayout.setColumnCount(col);
+        gridLayout.setRowCount(row);
+
+        for(int i=0, c=0, r=0; i<total-1; i++, c++) {
+            if(c == col) {
+                c = 0;
+                r++;
+            }
+
+            /*
+                     <LinearLayout
+            android:id="@+id/food"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:background="@drawable/folder_icon"
+                android:layout_margin="10dp"
+                android:clickable="false"/>
+            <TextView
+                android:text="음식"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"/>
+        </LinearLayout>
+
+
+            * */
+            SubLayout subLayout = new SubLayout(getApplicationContext());
+            subLayout.setId(main + i + 1);
+
+            TextView tv = subLayout.findViewById(R.id.subCategoryName);
+            tv.setText(Picture.names_kor[main][i+1]);
+
+            final int index = i + 1;
+            subLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent1 = new Intent(getApplicationContext(), DirectoryActivity.class);
+                    int subValue = main*10 + index;
+                    intent1.putExtra("category", subValue);
+                    startActivity(intent1);
+                }
+            });
+
+            gridLayout.addView(subLayout);
+        }
+    }
+
 
 }
