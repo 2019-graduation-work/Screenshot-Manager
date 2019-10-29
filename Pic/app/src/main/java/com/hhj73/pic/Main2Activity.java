@@ -30,6 +30,9 @@ import android.widget.Toast;
 import com.googlecode.tesseract.android.TessBaseAPI;
 import com.hhj73.pic.DB.DBHelper;
 import com.hhj73.pic.Objects.Picture;
+import com.twitter.penguin.korean.KoreanTokenJava;
+import com.twitter.penguin.korean.TwitterKoreanProcessorJava;
+import com.twitter.penguin.korean.tokenizer.KoreanTokenizer;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -56,6 +59,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import scala.collection.Seq;
+
+
 public class Main2Activity extends AppCompatActivity {
 
     String galleryPath;
@@ -78,6 +84,9 @@ public class Main2Activity extends AppCompatActivity {
     // OCR
     TessBaseAPI tessBaseAPI;
     String lang = "kor";
+
+    // Model
+    Interpreter tflite;
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -117,6 +126,8 @@ public class Main2Activity extends AppCompatActivity {
 
     public void loadInit() throws IOException {
         // 초기화
+
+        // for ocr
         galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/sample";
         fileList = new ArrayList<>();
         pictures = new ArrayList<>();
@@ -130,6 +141,7 @@ public class Main2Activity extends AppCompatActivity {
             tessBaseAPI.init(dir, lang);
         }
 
+        // 이미지 처리~
         for(int i=0; i<files.length; i++) {
             //            fileList.add(files[i].getName()); // 파일 이름 저장
             String path = galleryPath + "/" + files[i].getName();
@@ -172,8 +184,7 @@ public class Main2Activity extends AppCompatActivity {
 
         if(processedDate.equals("null")) {
             // 처리한 것이 없음 -> 전체 처리해야함
-//            processFile(0);
-            for(int i=0; i<5/*pictures.size()*/; i++) {
+            for(int i=0; i<pictures.size(); i++) {
                 Log.d(TAG, "====================");
 
                 Picture picture = pictures.get(i);
@@ -189,7 +200,7 @@ public class Main2Activity extends AppCompatActivity {
                 String creationTime = picture.getDate();
 
                 // 이미지 전처리
-                processImage(img);
+                img = processImage(img);
 
                 // OCR 처리
                 try {
@@ -217,6 +228,10 @@ public class Main2Activity extends AppCompatActivity {
                     editor.commit();
 
                     // 분류 작업 여기에
+                    List<String> nouns = processText(result);
+                    String[] inputString = (String[]) nouns.toArray(); // 숫자로 바꿔야 함 byte array????
+                    
+
                     // ........ 일단 카테고리 랜덤으로
                     Random random = new Random();
                     int rand = random.nextInt(9); // 0~8
@@ -224,7 +239,7 @@ public class Main2Activity extends AppCompatActivity {
 
                     // DB에 저장
                     dbHelper.insertData(picture);
-                    Log.d(TAG, "ㅇㅇ");
+                    Log.d(TAG, "db에 저장했음");
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -282,7 +297,6 @@ public class Main2Activity extends AppCompatActivity {
                         picture.setContents(result);
 
                         // sp editor에 입력
-                        Log.d(TAG, "sp editor에 입력"+result);
                         editor.putString("date", creationTime);
 //                    sp.edit().putString("date", creationTime);
                         editor.putString("path", path);
@@ -291,6 +305,21 @@ public class Main2Activity extends AppCompatActivity {
                         editor.commit();
 
                         // 분류 작업 여기에
+                        // 텍스트 분석, 명사 받아옴
+                        List<String> nouns = processText(result);
+                        String[] inputString = (String[]) nouns.toArray(); // 숫자로 바꿔야 함 byte array????
+
+//
+//
+//                        int[] output = new int[] {-1};
+//
+//                        tflite = getTfliteInterpreter("converted_model.tflite");
+//                        tflite.run(input, output);
+//
+//                        Toast.makeText(this, "모델"+String.valueOf(output[0]), Toast.LENGTH_SHORT).show();
+//                        Log.d("model output", String.valueOf(output[0]));
+
+
                         // ........ 일단 카테고리 랜덤으로
                         Random random = new Random();
                         int rand = random.nextInt(9); // 0~8
@@ -580,6 +609,31 @@ public class Main2Activity extends AppCompatActivity {
         }
     }
 
+    public List<String> processText(String result) {
+        // (1) normalize
+        CharSequence normalized = TwitterKoreanProcessorJava.normalize(result);
+        Log.d(TAG, "정규화: "+normalized);
+
+        // (2) Tokenize
+        Seq<KoreanTokenizer.KoreanToken> tokens = TwitterKoreanProcessorJava.tokenize(normalized);
+        Log.d(TAG, "토큰화: "+TwitterKoreanProcessorJava.tokensToJavaKoreanTokenList(tokens)+" ");
+
+        List<KoreanTokenJava> tokenList = TwitterKoreanProcessorJava.tokensToJavaKoreanTokenList(tokens);
+        List<String> nouns = new ArrayList<>();
+
+        for(int i=0; i<tokenList.size(); i++) {
+            // 명사만 저장
+            String pos = tokenList.get(i).getPos().toString();
+            if(pos.equals("Noun") || pos.equals("ProperNoun")) {
+                String noun = tokenList.get(i).getText();
+                nouns.add(noun);
+            }
+        }
+        Log.d(TAG, nouns.toString());
+
+        return nouns;
+    }
+
     // 모델 파일 인터프리터를 생성하는 공통 함수
     // loadModelFile 함수에 예외가 포함되어 있기 때문에 반드시 try, catch 블록이 필요하다.
     private Interpreter getTfliteInterpreter(String modelPath) {
@@ -600,10 +654,6 @@ public class Main2Activity extends AppCompatActivity {
         long declaredLength = fileDescriptor.getDeclaredLength();
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
-
-
-    출처: https://pythonkim.tistory.com/134?category=703510 [파이쿵]
-
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
