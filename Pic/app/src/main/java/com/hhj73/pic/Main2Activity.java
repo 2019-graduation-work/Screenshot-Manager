@@ -637,17 +637,17 @@ public class Main2Activity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                client.unload();
-            }
-        });
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        Log.d(TAG, "onStop");
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                client.unload();
+//            }
+//        });
+//    }
 
     private void classify(final String[] inputString) {
         handler.post(new Runnable() {
