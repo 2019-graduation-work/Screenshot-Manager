@@ -230,7 +230,7 @@ public class Main2Activity extends AppCompatActivity {
                     // 분류 작업 여기에
                     List<String> nouns = processText(result);
                     String[] inputString = (String[]) nouns.toArray(); // 숫자로 바꿔야 함 byte array????
-                    
+
 
                     // ........ 일단 카테고리 랜덤으로
                     Random random = new Random();
