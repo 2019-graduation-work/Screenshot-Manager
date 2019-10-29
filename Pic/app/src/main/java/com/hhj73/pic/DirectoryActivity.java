@@ -11,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -36,13 +35,13 @@ public class DirectoryActivity extends AppCompatActivity {
     DBHelper dbHelper;
     ArrayList<Picture> pictures;
 
-    String TAG = "꽥꽥";
+    String TAG = "ㅇㅅㅇ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directory);
-
+        Log.d(TAG, "안냐세염");
         initToolbar();
         init();
     }
@@ -104,9 +103,17 @@ public class DirectoryActivity extends AppCompatActivity {
                 r++;
             }
 
+            ImageListLayout layout = new ImageListLayout(getApplicationContext());
+            layout.setId(main + i + 1);
+
+//            ImageView imageView = layout.findViewById(R.id.imageView);
+            ImageView imageView = layout.findViewById(R.id.image);
+            if(imageView == null) {
+                Log.d(TAG, "엥?");
+            }
             File file = new File(pictures.get(i).getPath());
-            ImageView imageView = new ImageView(this);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
+//            ImageView imageView = new ImageView(this);
+//            imageView.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
 
             if(file.exists()) { // 파일 있으면
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -126,7 +133,7 @@ public class DirectoryActivity extends AppCompatActivity {
                     startActivity(intent1);
                 }
             });
-            gridLayout.addView(imageView);
+            gridLayout.addView(layout);
         }
     }
 

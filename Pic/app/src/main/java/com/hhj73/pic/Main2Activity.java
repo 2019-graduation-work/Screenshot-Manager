@@ -460,9 +460,15 @@ public class Main2Activity extends AppCompatActivity {
         화장품 20 (할인 21, 기초 22, 색조 23)
         여행 30 (관광지 31, 환전 32, 할인 33, 교통 34)
          */
-
+        Log.d(TAG, "value: " + value);
 //        Intent intent = new Intent(this, DirectoryActivity.class);
-        Intent intent = new Intent(this, SubCategoryActivity.class);
+        Intent intent;
+        if (value != 0) {
+            intent = new Intent(this, SubCategoryActivity.class);
+        }
+        else {
+            intent = new Intent(this, DirectoryActivity.class);
+        }
         intent.putExtra("category", value);
         startActivity(intent);
     }
