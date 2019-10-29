@@ -5,12 +5,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -37,16 +37,12 @@ import com.twitter.penguin.korean.tokenizer.KoreanTokenizer;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
-import org.tensorflow.lite.Interpreter;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
@@ -85,9 +81,8 @@ public class Main2Activity extends AppCompatActivity {
     TessBaseAPI tessBaseAPI;
     String lang = "kor";
 
-    // Model
-    Interpreter tflite;
-
+    private TextClassificationClient client;
+    Handler handler;
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
@@ -219,18 +214,11 @@ public class Main2Activity extends AppCompatActivity {
                     String result = tessBaseAPI.getUTF8Text();
                     picture.setContents(result);
 
-                    // sp editor에 입력
-                    editor.putString("date", creationTime);
-//                    sp.edit().putString("date", creationTime);
-                    editor.putString("path", path);
-//                    sp.edit().putString("path", path);
-                    editor.commit();
-                    editor.commit();
-
                     // 분류 작업 여기에
                     List<String> nouns = processText(result);
-                    String[] inputString = (String[]) nouns.toArray(); // 숫자로 바꿔야 함 byte array????
-
+//                    String[] inputString = (String[]) nouns.toArray();
+                    String[] inputString = nouns.toArray(new String[nouns.size()]);
+                    classify(inputString);
 
                     // ........ 일단 카테고리 랜덤으로
                     Random random = new Random();
@@ -240,6 +228,14 @@ public class Main2Activity extends AppCompatActivity {
                     // DB에 저장
                     dbHelper.insertData(picture);
                     Log.d(TAG, "db에 저장했음");
+
+                    // sp editor에 입력
+                    editor.putString("date", creationTime);
+//                    sp.edit().putString("date", creationTime);
+                    editor.putString("path", path);
+//                    sp.edit().putString("path", path);
+                    editor.commit();
+                    editor.commit();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -296,29 +292,13 @@ public class Main2Activity extends AppCompatActivity {
 
                         picture.setContents(result);
 
-                        // sp editor에 입력
-                        editor.putString("date", creationTime);
-//                    sp.edit().putString("date", creationTime);
-                        editor.putString("path", path);
-//                    sp.edit().putString("path", path);
-                        editor.commit();
-                        editor.commit();
 
                         // 분류 작업 여기에
                         // 텍스트 분석, 명사 받아옴
                         List<String> nouns = processText(result);
-                        String[] inputString = (String[]) nouns.toArray(); // 숫자로 바꿔야 함 byte array????
-
-//
-//
-//                        int[] output = new int[] {-1};
-//
-//                        tflite = getTfliteInterpreter("converted_model.tflite");
-//                        tflite.run(input, output);
-//
-//                        Toast.makeText(this, "모델"+String.valueOf(output[0]), Toast.LENGTH_SHORT).show();
-//                        Log.d("model output", String.valueOf(output[0]));
-
+//                        String[] inputString = (String[]) nouns.toArray();
+                        String[] inputString = nouns.toArray(new String[nouns.size()]);
+                        classify(inputString);
 
                         // ........ 일단 카테고리 랜덤으로
                         Random random = new Random();
@@ -328,6 +308,14 @@ public class Main2Activity extends AppCompatActivity {
                         // DB에 저장
                         dbHelper.insertData(picture);
                         Log.d(TAG, "ㅇㅇ");
+
+                        // sp editor에 입력
+                        editor.putString("date", creationTime);
+//                    sp.edit().putString("date", creationTime);
+                        editor.putString("path", path);
+//                    sp.edit().putString("path", path);
+                        editor.commit();
+                        editor.commit();
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -367,6 +355,9 @@ public class Main2Activity extends AppCompatActivity {
     public void init() {
         // 권한 설정
         checkPermissions();
+
+        client = new TextClassificationClient(getApplicationContext());
+        handler = new Handler();
 
         // layout
         LinearLayout[] directories = {
@@ -634,25 +625,38 @@ public class Main2Activity extends AppCompatActivity {
         return nouns;
     }
 
-    // 모델 파일 인터프리터를 생성하는 공통 함수
-    // loadModelFile 함수에 예외가 포함되어 있기 때문에 반드시 try, catch 블록이 필요하다.
-    private Interpreter getTfliteInterpreter(String modelPath) {
-        try {
-            return new Interpreter(loadModelFile(Main2Activity.this, modelPath));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                client.load();
+            }
+        });
     }
 
-    private MappedByteBuffer loadModelFile(Activity activity, String modelPath) throws IOException {
-        AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(modelPath);
-        FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
-        FileChannel fileChannel = inputStream.getChannel();
-        long startOffset = fileDescriptor.getStartOffset();
-        long declaredLength = fileDescriptor.getDeclaredLength();
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                client.unload();
+            }
+        });
+    }
+
+    private void classify(final String[] inputString) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                List<TextClassificationClient.Result> results = client.classify(inputString);
+
+            }
+        });
     }
 
     /**
