@@ -27,7 +27,7 @@ import java.util.PriorityQueue;
 /** Interface to load TfLite model and provide predictions. */
 public class TextClassificationClient {
     private static final String TAG = "ㅎㅇㅎㅇ";
-    private static final String MODEL_PATH = "text_classification.tflite";
+    private static final String MODEL_PATH = "converted_model.tflite";
     private static final String DIC_PATH = "vocab.txt";
     private static final String LABEL_PATH = "labels.txt";
 
@@ -164,11 +164,13 @@ public class TextClassificationClient {
 
         // Pre-prosessing.
         float[][] input = tokenizeInputText(inputString);
-
+        Log.d(TAG, "float input "+Arrays.toString(input));
         // Run inference.
         Log.v(TAG, "Classifying text with TF Lite...");
         float[][] output = new float[1][labels.size()];
+//        float[][] output = new float[SENTENCE_LEN][1];
         tflite.run(input, output);
+
 
         // Find the best classifications.
         PriorityQueue<Result> pq =
@@ -179,7 +181,7 @@ public class TextClassificationClient {
                         return Float.compare(rhs.getConfidence(), lhs.getConfidence());
                     }
                 });
-        for (int i = 0; i < labels.size(); i++) {
+        for (int i = 0; i < /*1*/labels.size(); i++) {
             pq.add(new Result("" + i, labels.get(i), output[0][i]));
         }
         final ArrayList<Result> results = new ArrayList<>();
@@ -229,6 +231,7 @@ public class TextClassificationClient {
                 }
                 dic.put(line.get(0), Integer.parseInt(line.get(1)));
             }
+            Log.d(TAG, "Dictionary complete");
         }
     }
 
@@ -240,18 +243,18 @@ public class TextClassificationClient {
 
         int index = 0;
         // Prepend <START> if it is in vocabulary file.
-        if (dic.containsKey(START)) {
-            tmp[index++] = dic.get(START);
-        }
+//        if (dic.containsKey(START)) {
+//            tmp[index++] = dic.get(START);
+//        }
 
         for (String word : array) {
             if (index >= SENTENCE_LEN) {
                 break;
             }
-            tmp[index++] = dic.containsKey(word) ? dic.get(word) : (int) dic.get(UNKNOWN); // 여기서 오류남..ㅋㅋ;;
+            tmp[index++] = dic.containsKey(word) ? dic.get(word) : /* dic.get(UNKNOWN) */0;
         }
         // Padding and wrapping.
-        Arrays.fill(tmp, index, SENTENCE_LEN - 1, (int) dic.get(PAD));
+        Arrays.fill(tmp, index, SENTENCE_LEN - 1, /*(int) dic.get(PAD)*/0);
         float[][] ans = {tmp};
         return ans;
     }
