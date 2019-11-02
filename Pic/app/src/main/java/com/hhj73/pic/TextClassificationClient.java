@@ -159,7 +159,7 @@ public class TextClassificationClient {
 
     /** Classify an input string and returns the classification results. */
     @WorkerThread
-    public synchronized List<Result> classify(String[] inputString) {
+    public synchronized /*List<Result>*/ String classify(String[] inputString) {
         Log.d(TAG, "으앙"+Arrays.toString(inputString));
 
         // Pre-prosessing.
@@ -191,7 +191,8 @@ public class TextClassificationClient {
 
         Log.d(TAG, "result: "+results.toString());
         // Return the probability of each class.
-        return results;
+//        return results;
+        return results.get(0).title;
     }
 
 

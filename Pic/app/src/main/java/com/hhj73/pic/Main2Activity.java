@@ -53,7 +53,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import scala.collection.Seq;
 
@@ -83,6 +82,8 @@ public class Main2Activity extends AppCompatActivity {
 
     private TextClassificationClient client;
     Handler handler;
+//    int categoryNumber = 0;
+
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
@@ -212,18 +213,23 @@ public class Main2Activity extends AppCompatActivity {
 
                     tessBaseAPI.setImage(img);
                     String result = tessBaseAPI.getUTF8Text();
+                    result = result.replaceAll("!\"#[$]%&\\(\\)\\{\\}@`[*]:[+];-.<>,\\^~|'\\[\\]", "");
+                    Log.d(TAG, "result: "+result);
+
                     picture.setContents(result);
 
                     // 분류 작업 여기에
                     List<String> nouns = processText(result);
 //                    String[] inputString = (String[]) nouns.toArray();
                     String[] inputString = nouns.toArray(new String[nouns.size()]);
-                    classify(inputString);
+                    classify(inputString, picture);
+//                    picture.setCategory(categoryNumber);
+//                    Log.d(TAG, "categoryNumber: " + categoryNumber);
 
                     // ........ 일단 카테고리 랜덤으로
-                    Random random = new Random();
-                    int rand = random.nextInt(9); // 0~8
-                    picture.setCategory(rand);
+//                    Random random = new Random();
+//                    int rand = random.nextInt(9); // 0~8
+//                    picture.setCategory(rand);
 
                     // DB에 저장
                     dbHelper.insertData(picture);
@@ -288,6 +294,8 @@ public class Main2Activity extends AppCompatActivity {
 
                         tessBaseAPI.setImage(img);
                         String result = tessBaseAPI.getUTF8Text();
+                        result = result.replaceAll("!\"#[$]%&\\(\\)\\{\\}@`[*]:[+];-.<>,\\^~|'\\[\\]", "");
+
                         Log.d(TAG, "result: "+result);
 
                         picture.setContents(result);
@@ -298,12 +306,13 @@ public class Main2Activity extends AppCompatActivity {
                         List<String> nouns = processText(result);
 //                        String[] inputString = (String[]) nouns.toArray();
                         String[] inputString = nouns.toArray(new String[nouns.size()]);
-                        classify(inputString);
+                        classify(inputString, picture);
+//                        Log.d(TAG, "categoryNumber: " + categoryNumber);
 
                         // ........ 일단 카테고리 랜덤으로
-                        Random random = new Random();
-                        int rand = random.nextInt(9); // 0~8
-                        picture.setCategory(rand);
+//                        Random random = new Random();
+//                        int rand = random.nextInt(9); // 0~8
+//                        picture.setCategory(rand);
 
                         // DB에 저장
                         dbHelper.insertData(picture);
@@ -378,42 +387,12 @@ public class Main2Activity extends AppCompatActivity {
                     case R.id.food: // 10
                         switchActivity(10);
                         break;
-//                    case R.id.restaurant: // 11
-//                        switchActivity(11);
-//                        break;
-//                    case R.id.recipe: // 12
-//                        switchActivity(12);
-//                        break;
-//                    case R.id.cafe: // 13
-//                        switchActivity(13);
-//                        break;
                     case R.id.cosmetic: // 20
                         switchActivity(20);
                         break;
-//                    case R.id.cosmetic_discount: // 21
-//                        switchActivity(21);
-//                        break;
-//                    case R.id.skincare: // 22
-//                        switchActivity(22);
-//                        break;
-//                    case R.id.color: // 23
-//                        switchActivity(23);
-//                        break;
                     case R.id.travel: // 30
                         switchActivity(30);
                         break;
-//                    case R.id.place: // 31
-//                        switchActivity(31);
-//                        break;
-//                    case R.id.exchange: // 32
-//                        switchActivity(32);
-//                        break;
-//                    case R.id.travel_discount: // 33
-//                        switchActivity(33);
-//                        break;
-//                    case R.id.transport: // 34
-//                        switchActivity(34);
-//                        break;
                 }
             }
         };
@@ -655,12 +634,15 @@ public class Main2Activity extends AppCompatActivity {
 //        });
 //    }
 
-    private void classify(final String[] inputString) {
+    private void classify(final String[] inputString, final Picture picture) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                List<TextClassificationClient.Result> results = client.classify(inputString);
-
+//                List<TextClassificationClient.Result> results = client.classify(inputString);
+                String categoryName = client.classify(inputString);
+                int categoryNumber = Integer.parseInt(categoryName);
+                Log.d(TAG, "classify- categoryNumber: " + categoryNumber);
+                picture.setCategory(categoryNumber);
             }
         });
     }

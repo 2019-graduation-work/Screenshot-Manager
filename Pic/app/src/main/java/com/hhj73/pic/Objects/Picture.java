@@ -19,7 +19,7 @@ public class Picture /*implements Comparable<Picture>*/ implements Serializable 
             {"unknown"},
             {"food", "restaurant", "recipe", "cafe"},
             {"cosmetic", "discount", "skincare", "color"},
-            {"travel", "place", "exchange", "discount", "transport"}
+            {"travel", "place", "exchange", "transport"}
     };
 
     public static final String[][] names_kor = {

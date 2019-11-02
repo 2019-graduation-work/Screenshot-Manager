@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Pic</string>
-    <string name="myAppName">Picument</string>
+    <string name="myAppName">Screenshot Manager</string>
     <string name="category0">여행</string>
 </resources>
