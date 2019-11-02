@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,7 @@ public class Main2Activity extends AppCompatActivity {
     DBHelper dbHelper;
 
     private static final String TAG = "ㅎㅇ";
+    private static final String TAG2 = "진행률";
 
     private SharedPreferences sp;
 
@@ -83,6 +85,10 @@ public class Main2Activity extends AppCompatActivity {
     private TextClassificationClient client;
     Handler handler;
 //    int categoryNumber = 0;
+
+    // progressBar
+    ProgressBar progress;
+    double processRate = 0;
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -242,12 +248,15 @@ public class Main2Activity extends AppCompatActivity {
 //                    sp.edit().putString("path", path);
                     editor.commit();
                     editor.commit();
+
+                    int total = pictures.size();
+                    processRate = (i+1) / total * 100;
+                    progress.setProgress((int) processRate);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
         }
         else { // 처리한 내역이 있으면 그 이후부터 처리함
             Log.d(TAG, "처리한 내역 존재");
@@ -256,8 +265,18 @@ public class Main2Activity extends AppCompatActivity {
             int index = 0;
             try {
                 index = binarySearchIndex(processedDate) + 1; // 이전에 처리했던 이미지 다음 인덱스
+                int total = pictures.size() - index;
+                int count = 0;
+                Log.d(TAG2, "total: "+ total);
                 for(int i=index; i<pictures.size(); i++) {
                     Log.d(TAG, "====================");
+                    count++;
+
+                    Log.d(TAG2, "count: "+count);
+                    Log.d(TAG2, "count/total: "+count/total);
+                    processRate = ((double) count / total) * 100;
+                    progress.setProgress((int)processRate);
+                    Log.d(TAG2, "rate: "+processRate);
 
                     Picture picture = pictures.get(i);
                     if(picture == null )
@@ -325,11 +344,13 @@ public class Main2Activity extends AppCompatActivity {
 //                    sp.edit().putString("path", path);
                         editor.commit();
                         editor.commit();
+
                     }
                     catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
+                progress.setProgress(100);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -362,6 +383,9 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void init() {
+        progress = (ProgressBar) findViewById(R.id.progress);
+        progress.setProgress((int) processRate);
+
         // 권한 설정
         checkPermissions();
 
