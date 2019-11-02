@@ -1,10 +1,11 @@
 package com.hhj73.pic;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -13,17 +14,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hhj73.pic.DB.DBHelper;
+import com.hhj73.pic.LayoutObjects.MyAdapter;
 import com.hhj73.pic.Objects.Category;
 import com.hhj73.pic.Objects.Picture;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class DirectoryActivity extends AppCompatActivity {
@@ -36,6 +36,14 @@ public class DirectoryActivity extends AppCompatActivity {
     ArrayList<Picture> pictures;
 
     String TAG = "ㅇㅅㅇ";
+
+    // View
+    Context mContext;
+    RelativeLayout mRelativeLayout;
+    RecyclerView mRecyclerView;
+    RecyclerView.Adapter mAdapter;
+    RecyclerView.LayoutManager mLayoutManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,52 +97,58 @@ public class DirectoryActivity extends AppCompatActivity {
         dbHelper = new DBHelper(this, "data", null, 1);
         pictures = (ArrayList<Picture>) dbHelper.getCategoryData(value);
 
+        // 레이아웃
+        mContext = getApplicationContext();
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.rl);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mLayoutManager = new GridLayoutManager(mContext, 2);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new MyAdapter(pictures,  mContext);
+        mRecyclerView.setAdapter(mAdapter);
+
         // 레이아웃 동적으로 생성
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
-        int total = pictures.size();
-        int col = 3;
-        int row = total / col + 1;
-        gridLayout.setColumnCount(col);
-        gridLayout.setRowCount(row);
-
-        for(int i=0, c=0, r=0; i<pictures.size(); i++, c++) {
-            if(c == col) {
-                c = 0;
-                r++;
-            }
-
-            ImageListLayout layout = new ImageListLayout(getApplicationContext());
-            layout.setId(main + i + 1);
-
-//            ImageView imageView = layout.findViewById(R.id.imageView);
-            ImageView imageView = layout.findViewById(R.id.image);
-            if(imageView == null) {
-                Log.d(TAG, "엥?");
-            }
-            File file = new File(pictures.get(i).getPath());
-//            ImageView imageView = new ImageView(this);
-//            imageView.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
-
-            if(file.exists()) { // 파일 있으면
-                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                imageView.setImageBitmap(bitmap);
-            }
-            else { // 파일 없으면
-                imageView.setBackgroundResource(R.drawable.not_found);
-            }
-
-            // 클릭하면 상세보기
-            final int index = i;
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent1 = new Intent(getApplicationContext(), ImageViewActivity.class);
-                    intent1.putExtra("picture", pictures.get(index));
-                    startActivity(intent1);
-                }
-            });
-            gridLayout.addView(layout);
-        }
+//        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
+//        int total = pictures.size();
+//        int col = 2;
+//        int row = total / col + 1;
+//        gridLayout.setColumnCount(col);
+//        gridLayout.setRowCount(row);
+//
+//        for(int i=0, c=0, r=0; i<pictures.size(); i++, c++) {
+//            if(c == col) {
+//                c = 0;
+//                r++;
+//            }
+//
+//            ImageListLayout layout = new ImageListLayout(getApplicationContext());
+//            layout.setId(main + i + 1);
+//
+//            ImageView imageView = layout.findViewById(R.id.image);
+//            if(imageView == null) {
+//                Log.d(TAG, "엥?");
+//            }
+//            File file = new File(pictures.get(i).getPath());
+//
+//            if(file.exists()) { // 파일 있으면
+//                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+//                imageView.setImageBitmap(bitmap);
+//            }
+//            else { // 파일 없으면
+//                imageView.setBackgroundResource(R.drawable.not_found);
+//            }
+//
+//            // 클릭하면 상세보기
+//            final int index = i;
+//            imageView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent1 = new Intent(getApplicationContext(), ImageViewActivity.class);
+//                    intent1.putExtra("picture", pictures.get(index));
+//                    startActivity(intent1);
+//                }
+//            });
+//            gridLayout.addView(layout);
+//        }
     }
 
     @Override

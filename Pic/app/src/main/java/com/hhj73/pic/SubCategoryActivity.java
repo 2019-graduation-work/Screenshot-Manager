@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hhj73.pic.DB.DBHelper;
+import com.hhj73.pic.LayoutObjects.SubLayout;
 import com.hhj73.pic.Objects.Category;
 import com.hhj73.pic.Objects.Picture;
 
