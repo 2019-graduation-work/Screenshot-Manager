@@ -31,7 +31,7 @@ public class TextClassificationClient {
     private static final String DIC_PATH = "vocab.txt";
     private static final String LABEL_PATH = "labels.txt";
 
-    private static final int SENTENCE_LEN = 1308;  // The maximum length of an input sentence.
+    private static final int SENTENCE_LEN = 2000;  // The maximum length of an input sentence.
     // Simple delimiter to split words.
     private static final String SIMPLE_SPACE_OR_PUNCTUATION = " |\\,|\\.|\\!|\\?|\n";
     /*
