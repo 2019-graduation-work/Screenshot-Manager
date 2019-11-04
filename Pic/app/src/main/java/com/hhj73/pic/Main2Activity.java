@@ -82,8 +82,10 @@ public class Main2Activity extends AppCompatActivity {
     TessBaseAPI tessBaseAPI;
     String lang = "kor";
 
+    // classification model
     private TextClassificationClient client;
     Handler handler;
+    boolean loaded = false;
 //    int categoryNumber = 0;
 
     // progressBar
@@ -138,7 +140,7 @@ public class Main2Activity extends AppCompatActivity {
         dbHelper = new DBHelper(this, "data", null, 1);
 
         tessBaseAPI = new TessBaseAPI();
-        tessBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "!@#$%^&*()_+=-[]}{;:'\"\\|~`,./<>?〉〈′、`』"); // 비추천 글자
+//        tessBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "!@#$%^&*()_+=-[]}{;:'\"\\|~`,./<>?〉〈′、`』"); // 비추천 글자
 
         String dir = getFilesDir() + "/tesseract";
         if(checkLanguageFile(dir/*+"/tessdata"*/)) {
@@ -234,14 +236,9 @@ public class Main2Activity extends AppCompatActivity {
 //                    picture.setCategory(categoryNumber);
 //                    Log.d(TAG, "categoryNumber: " + categoryNumber);
 
-                    // ........ 일단 카테고리 랜덤으로
-//                    Random random = new Random();
-//                    int rand = random.nextInt(9); // 0~8
-//                    picture.setCategory(rand);
-
-                    // DB에 저장
-                    dbHelper.insertData(picture);
-                    Log.d(TAG, "db에 저장했음");
+//                    // DB에 저장
+//                    dbHelper.insertData(picture);
+//                    Log.d(TAG, "db에 저장했음");
 
                     // sp editor에 입력
                     editor.putString("date", creationTime);
@@ -335,9 +332,9 @@ public class Main2Activity extends AppCompatActivity {
 //                        int rand = random.nextInt(9); // 0~8
 //                        picture.setCategory(rand);
 
-                        // DB에 저장
-                        dbHelper.insertData(picture);
-                        Log.d(TAG, "ㅇㅇ");
+//                        // DB에 저장
+//                        dbHelper.insertData(picture);
+//                        Log.d(TAG, "ㅇㅇ");
 
                         // sp editor에 입력
                         editor.putString("date", creationTime);
@@ -639,12 +636,15 @@ public class Main2Activity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                client.load();
-            }
-        });
+        if(!loaded) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    client.load();
+                }
+            });
+            loaded = true;
+        }
     }
 
 //    @Override
@@ -668,6 +668,10 @@ public class Main2Activity extends AppCompatActivity {
                 int categoryNumber = Integer.parseInt(categoryName);
                 Log.d(TAG, "classify- categoryNumber: " + categoryNumber);
                 picture.setCategory(categoryNumber);
+
+                // DB에 저장
+                dbHelper.insertData(picture);
+                Log.d(TAG, "db에 저장했음");
             }
         });
     }
