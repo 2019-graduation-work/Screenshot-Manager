@@ -138,6 +138,8 @@ public class Main2Activity extends AppCompatActivity {
         dbHelper = new DBHelper(this, "data", null, 1);
 
         tessBaseAPI = new TessBaseAPI();
+        tessBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "!@#$%^&*()_+=-[]}{;:'\"\\|~`,./<>?〉〈′、`』"); // 비추천 글자
+
         String dir = getFilesDir() + "/tesseract";
         if(checkLanguageFile(dir/*+"/tessdata"*/)) {
             tessBaseAPI.init(dir, lang);
@@ -250,7 +252,7 @@ public class Main2Activity extends AppCompatActivity {
                     editor.commit();
 
                     int total = pictures.size();
-                    processRate = (i+1) / total * 100;
+                    processRate = ((double) (i+1) / total) * 100;
                     progress.setProgress((int) processRate);
                 }
                 catch (Exception e) {
@@ -405,7 +407,6 @@ public class Main2Activity extends AppCompatActivity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.unknown: // 00. unknown
-                        Toast.makeText(Main2Activity.this, "0", Toast.LENGTH_SHORT).show();
                         switchActivity(00);
                         break;
                     case R.id.food: // 10

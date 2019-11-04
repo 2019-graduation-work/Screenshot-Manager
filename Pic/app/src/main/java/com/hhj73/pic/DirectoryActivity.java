@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hhj73.pic.DB.DBHelper;
 import com.hhj73.pic.LayoutObjects.MyAdapter;
@@ -91,7 +90,7 @@ public class DirectoryActivity extends AppCompatActivity {
         Log.d(TAG, "sub: "+String.valueOf(sub));
 
         categoryName = Picture.names[main][sub];
-        Toast.makeText(this, categoryName, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, categoryName, Toast.LENGTH_SHORT).show();
 
         // 이미지 로드
         dbHelper = new DBHelper(this, "data", null, 1);

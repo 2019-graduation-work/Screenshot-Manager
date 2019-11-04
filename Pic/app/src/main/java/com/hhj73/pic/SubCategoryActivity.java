@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hhj73.pic.DB.DBHelper;
 import com.hhj73.pic.LayoutObjects.SubLayout;
@@ -100,7 +99,7 @@ public class SubCategoryActivity extends AppCompatActivity {
         final int main = value/10; // 대분류 (10의 자리)
 
         categoryName = Picture.names[main][0]; // 대분류
-        Toast.makeText(this, categoryName, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, categoryName, Toast.LENGTH_SHORT).show();
 
         // 레이아웃 동적으로 생성
         GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
