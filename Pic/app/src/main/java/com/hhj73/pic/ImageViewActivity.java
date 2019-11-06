@@ -5,8 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,11 +18,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hhj73.pic.LayoutObjects.ImageInformationAdapter;
 import com.hhj73.pic.Objects.Picture;
 
 import java.io.File;
 
 public class ImageViewActivity extends AppCompatActivity {
+
+    RecyclerView recyclerView;
+    ImageInformationAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +66,21 @@ public class ImageViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Picture picture = (Picture) intent.getSerializableExtra("picture");
 
-        TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
-        TextView contentsTextView = (TextView) findViewById(R.id.contentsTextView);
+//        TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
+//        TextView contentsTextView = (TextView) findViewById(R.id.contentsTextView);
 
-        titleTextView.setText(picture.getDate());
-        contentsTextView.setText(picture.getContents());
-        contentsTextView.setMovementMethod(new ScrollingMovementMethod());
+//        titleTextView.setText(picture.getDate());
+//        contentsTextView.setText(picture.getContents());
+//        contentsTextView.setMovementMethod(new ScrollingMovementMethod());
+
+        recyclerView = findViewById(R.id.recyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new ImageInformationAdapter();
+        recyclerView.setAdapter(adapter);
+
+        adapter.addItem(picture);
+        adapter.notifyDataSetChanged();
 
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         File file = new File(picture.getPath());
