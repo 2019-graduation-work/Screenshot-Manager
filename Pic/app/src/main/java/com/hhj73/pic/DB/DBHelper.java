@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
 import com.hhj73.pic.Objects.Picture;
 
@@ -29,14 +28,14 @@ public class DBHelper extends SQLiteOpenHelper {
         sb.append(" PATH TEXT, "); // 이미지 경로
         sb.append(" CONTENTS TEXT, "); // 추출한 텍스트
         sb.append(" DATE TEXT, "); // 저장 날짜
-        sb.append(" CATEGORY INTEGER ) "); // 카테고리
+        sb.append(" CATEGORY INTEGER, "); // 카테고리
+        sb.append(" KEYWORD TEXT ) "); // 키워드
 
         // SQLite Database로 쿼리 실행
         db.execSQL(sb.toString());
 
         // 카테고리로 가져오는 인덱스
         db.execSQL("CREATE INDEX IF NOT EXISTS DATA_CATEGORY ON DATA(_ID, PATH, CONTENTS, DATE, CATEGORY)");
-        Toast.makeText(context, "모든 게 마음먹기 달렸어..", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -50,6 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
         2: contents (TEXT)
         3: date (TEXT) yyyy-MM-dd hh:mm:ss
         4: category (INTEGER)
+        5: keyword (TEXT)
      */
 
     public void insertData(Picture picture) {
@@ -58,15 +58,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
         StringBuffer sb = new StringBuffer();
         sb.append(" INSERT INTO DATA ( ");
-        sb.append(" PATH, CONTENTS, DATE, CATEGORY ) ");
-        sb.append(" VALUES ( ?, ?, ?, ? ) ");
+        sb.append(" PATH, CONTENTS, DATE, CATEGORY, KEYWORD ) ");
+        sb.append(" VALUES ( ?, ?, ?, ?, ? ) ");
 
         db.execSQL(sb.toString(),
                 new Object[] {
                         picture.getPath(),
                         picture.getContents(),
                         picture.getDate(),
-                        picture.getCategory()
+                        picture.getCategory(),
+                        picture.getKeyword()
                 });
     }
 
@@ -86,6 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
             picture.setContents(cursor.getString(2));
             picture.setDate(cursor.getString(3));
             picture.setCategory(cursor.getInt(4));
+            picture.setKeyword(cursor.getString(5));
             allData.add(picture);
         }
 
@@ -110,6 +112,7 @@ public class DBHelper extends SQLiteOpenHelper {
             picture.setContents(cursor.getString(2));
             picture.setDate(cursor.getString(3));
             picture.setCategory(cursor.getInt(4));
+            picture.setKeyword(cursor.getString(5));
             data.add(picture);
         }
 
@@ -134,6 +137,7 @@ public class DBHelper extends SQLiteOpenHelper {
             picture.setContents(cursor.getString(2));
             picture.setDate(cursor.getString(3));
             picture.setCategory(cursor.getInt(4));
+            picture.setKeyword(cursor.getString(5));
             data.add(picture);
         }
 

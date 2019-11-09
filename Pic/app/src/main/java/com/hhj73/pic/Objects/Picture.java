@@ -7,7 +7,15 @@ public class Picture /*implements Comparable<Picture>*/ implements Serializable 
     String contents; // 추출한 contents
     String date;
     int category = 0;
+    String keyword; // 키워드
 
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
     /* categories */
 //    public static final String[] names = {
 //            "unknown", "travel", "food",
