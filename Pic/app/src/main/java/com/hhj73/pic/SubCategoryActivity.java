@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -143,6 +144,9 @@ public class SubCategoryActivity extends AppCompatActivity {
 
             TextView tv = subLayout.findViewById(R.id.subCategoryName);
             tv.setText(Picture.names_kor[main][i+1]);
+
+            ImageButton imageButton = subLayout.findViewById(R.id.subDirectoryBtn);
+            imageButton.setBackgroundResource(Picture.icons[main][i+1]);
 
             final int index = i + 1;
             subLayout.setOnClickListener(new View.OnClickListener() {

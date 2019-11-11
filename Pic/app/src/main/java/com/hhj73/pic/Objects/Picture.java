@@ -2,6 +2,8 @@ package com.hhj73.pic.Objects;
 
 import android.util.Log;
 
+import com.hhj73.pic.R;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -59,7 +61,14 @@ public class Picture /*implements Comparable<Picture>*/ implements Serializable 
             {"기타"},
             {"음식", "맛집", "레시피", "카페/디저트"},
             {"화장품", "할인", "기초", "색조"},
-            {"여행", "관광지", "환전", "할인", "교통"}
+            {"여행", "관광지", "환전", "교통"}
+    };
+
+    public static final int[][] icons = {
+            {R.drawable.unknown},
+            {R.drawable.folder_icon, R.drawable.restaurant, R.drawable.recipe, R.drawable.cafe},
+            {R.drawable.cosmetic, R.drawable.discount, R.drawable.skincare, R.drawable.color},
+            {R.drawable.travel, R.drawable.place, R.drawable.exchange, R.drawable.transport}
     };
 
     public Picture() {
