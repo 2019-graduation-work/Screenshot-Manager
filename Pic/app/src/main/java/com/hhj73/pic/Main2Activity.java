@@ -91,6 +91,7 @@ public class Main2Activity extends AppCompatActivity {
     // progressBar
     ProgressBar progress;
     double processRate = 0;
+    TextView processTextView;
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -126,6 +127,31 @@ public class Main2Activity extends AppCompatActivity {
         });
 
         thread.start();
+
+        // UI thread
+        Thread UIThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while(processRate == 100.0) {
+                            try {
+                                processTextView.setText(processRate + "% 처리 중..");
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        progress.setProgress((int) processRate);
+                        processTextView.setText("처리가 끝났습니다.");
+
+                    }
+                });
+            }
+        });
+
+        UIThread.start();
     }
 
     public void loadInit() throws IOException {
@@ -234,12 +260,6 @@ public class Main2Activity extends AppCompatActivity {
                     String keys = picture.makeKeyword((ArrayList<String>) nouns);
                     picture.setKeyword(keys);
                     classify(inputString, picture);
-//                    picture.setCategory(categoryNumber);
-//                    Log.d(TAG, "categoryNumber: " + categoryNumber);
-
-//                    // DB에 저장
-//                    dbHelper.insertData(picture);
-//                    Log.d(TAG, "db에 저장했음");
 
                     // sp editor에 입력
                     editor.putString("date", creationTime);
@@ -268,6 +288,9 @@ public class Main2Activity extends AppCompatActivity {
                 int total = pictures.size() - index;
                 int count = 0;
                 Log.d(TAG2, "total: "+ total);
+                if(total == 0) {
+                    progress.setVisibility(View.GONE);
+                }
                 for(int i=index; i<pictures.size(); i++) {
                     Log.d(TAG, "====================");
                     count++;
@@ -328,16 +351,6 @@ public class Main2Activity extends AppCompatActivity {
                         String keys = picture.makeKeyword((ArrayList<String>) nouns);
                         picture.setKeyword(keys);
                         classify(inputString, picture);
-//                        Log.d(TAG, "categoryNumber: " + categoryNumber);
-
-                        // ........ 일단 카테고리 랜덤으로
-//                        Random random = new Random();
-//                        int rand = random.nextInt(9); // 0~8
-//                        picture.setCategory(rand);
-
-//                        // DB에 저장
-//                        dbHelper.insertData(picture);
-//                        Log.d(TAG, "ㅇㅇ");
 
                         // sp editor에 입력
                         editor.putString("date", creationTime);
@@ -387,6 +400,8 @@ public class Main2Activity extends AppCompatActivity {
     public void init() {
         progress = (ProgressBar) findViewById(R.id.progress);
         progress.setProgress((int) processRate);
+        processTextView = (TextView) findViewById(R.id.processTextView);
+        processTextView.setText(processRate + "% 처리 중..");
 
         // 권한 설정
         checkPermissions();
