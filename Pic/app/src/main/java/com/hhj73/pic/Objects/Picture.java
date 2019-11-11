@@ -1,6 +1,8 @@
 package com.hhj73.pic.Objects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Picture /*implements Comparable<Picture>*/ implements Serializable { // 사진
     String path; // 경로
@@ -13,8 +15,16 @@ public class Picture /*implements Comparable<Picture>*/ implements Serializable 
         return keyword;
     }
 
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
+    public void setKeyword(ArrayList<String> nouns) {
+        HashSet<String> set = new HashSet<>(nouns);
+        nouns = new ArrayList<String>(set);
+        String str = "";
+
+        for(int i=0; i<nouns.size(); i++) {
+            str += (nouns.get(i) + ",");
+        }
+
+        this.keyword = str;
     }
     /* categories */
 //    public static final String[] names = {

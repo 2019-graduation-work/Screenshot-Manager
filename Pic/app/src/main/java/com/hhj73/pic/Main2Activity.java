@@ -50,11 +50,9 @@ import java.nio.file.attribute.FileTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import scala.collection.Seq;
@@ -134,7 +132,7 @@ public class Main2Activity extends AppCompatActivity {
         // 초기화
 
         // for ocr
-        galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/sample";
+        galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Screenshots";
         fileList = new ArrayList<>();
         pictures = new ArrayList<>();
         File directory = new File(galleryPath);
@@ -233,7 +231,7 @@ public class Main2Activity extends AppCompatActivity {
                     // 분류 작업 여기에
                     List<String> nouns = processText(result);
                     String[] inputString = nouns.toArray(new String[nouns.size()]);
-                    picture.setKeyword(Arrays.toString(inputString));
+                    picture.setKeyword((ArrayList<String>) nouns);
                     classify(inputString, picture);
 //                    picture.setCategory(categoryNumber);
 //                    Log.d(TAG, "categoryNumber: " + categoryNumber);
@@ -326,7 +324,7 @@ public class Main2Activity extends AppCompatActivity {
                         List<String> nouns = processText(result);
 //                        String[] inputString = (String[]) nouns.toArray();
                         String[] inputString = nouns.toArray(new String[nouns.size()]);
-                        picture.setKeyword(Arrays.toString(inputString));
+                        picture.setKeyword((ArrayList<String>) nouns);
                         classify(inputString, picture);
 //                        Log.d(TAG, "categoryNumber: " + categoryNumber);
 
@@ -633,9 +631,9 @@ public class Main2Activity extends AppCompatActivity {
         Log.d(TAG, nouns.toString());
 
         // 중복 제거
-        HashSet<String> set = new HashSet<>(nouns);
-        nouns = new ArrayList<String>(set);
-        Log.d(TAG, "증복 제거" + nouns.toString());
+//        HashSet<String> set = new HashSet<>(nouns);
+//        nouns = new ArrayList<String>(set);
+//        Log.d(TAG, "증복 제거" + nouns.toString());
 
         return nouns;
     }
