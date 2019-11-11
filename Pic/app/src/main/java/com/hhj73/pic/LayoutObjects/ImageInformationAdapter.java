@@ -51,7 +51,7 @@ public class ImageInformationAdapter extends RecyclerView.Adapter<ImageInformati
 
         void onBind(Picture picture) {
             dateTextView.setText(picture.getDate());
-//            keywordTextView.setText(picture.getKeyword());
+            keywordTextView.setText(picture.getKeyword());
             contentsTextView.setText(picture.getContents());
         }
     }

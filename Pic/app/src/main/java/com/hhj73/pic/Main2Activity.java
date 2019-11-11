@@ -231,7 +231,8 @@ public class Main2Activity extends AppCompatActivity {
                     // 분류 작업 여기에
                     List<String> nouns = processText(result);
                     String[] inputString = nouns.toArray(new String[nouns.size()]);
-                    picture.setKeyword((ArrayList<String>) nouns);
+                    String keys = picture.makeKeyword((ArrayList<String>) nouns);
+                    picture.setKeyword(keys);
                     classify(inputString, picture);
 //                    picture.setCategory(categoryNumber);
 //                    Log.d(TAG, "categoryNumber: " + categoryNumber);
@@ -324,7 +325,8 @@ public class Main2Activity extends AppCompatActivity {
                         List<String> nouns = processText(result);
 //                        String[] inputString = (String[]) nouns.toArray();
                         String[] inputString = nouns.toArray(new String[nouns.size()]);
-                        picture.setKeyword((ArrayList<String>) nouns);
+                        String keys = picture.makeKeyword((ArrayList<String>) nouns);
+                        picture.setKeyword(keys);
                         classify(inputString, picture);
 //                        Log.d(TAG, "categoryNumber: " + categoryNumber);
 

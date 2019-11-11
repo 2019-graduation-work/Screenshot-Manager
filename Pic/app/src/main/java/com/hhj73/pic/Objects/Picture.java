@@ -1,5 +1,7 @@
 package com.hhj73.pic.Objects;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,17 +17,30 @@ public class Picture /*implements Comparable<Picture>*/ implements Serializable 
         return keyword;
     }
 
-    public void setKeyword(ArrayList<String> nouns) {
+//    public void setKeyword(String keyword) {
+//
+//    }
+
+    public String makeKeyword(ArrayList<String> nouns) {
         HashSet<String> set = new HashSet<>(nouns);
         nouns = new ArrayList<String>(set);
-        String str = "";
+
+        String displayKeywords = "";
 
         for(int i=0; i<nouns.size(); i++) {
-            str += (nouns.get(i) + ",");
+            displayKeywords += ("#" + nouns.get(i) + " ");
         }
 
-        this.keyword = str;
+        Log.d("ㅎㅇ", displayKeywords);
+
+        this.keyword = displayKeywords;
+        return displayKeywords;
     }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
     /* categories */
 //    public static final String[] names = {
 //            "unknown", "travel", "food",
