@@ -144,7 +144,8 @@ public class Main2Activity extends AppCompatActivity {
                             }
                         }
                         progress.setProgress((int) processRate);
-                        processTextView.setText("처리가 끝났습니다.");
+//                        processTextView.setText("처리가 끝났습니다.");
+                        processTextView.setVisibility(View.GONE);
 
                     }
                 });

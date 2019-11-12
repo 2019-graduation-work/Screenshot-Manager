@@ -29,7 +29,7 @@ public class TextClassificationClient {
     private static final String TAG = "ㅎㅇㅎㅇ";
     private static final String MODEL_PATH = "converted_model.tflite";
     private static final String DIC_PATH = "vocab.txt";
-    private static final String LABEL_PATH = "labels.txt";
+    private static final String LABEL_PATH = "labels1.txt";
 
     private static final int SENTENCE_LEN = 2000;  // The maximum length of an input sentence.
     // Simple delimiter to split words.
@@ -190,9 +190,25 @@ public class TextClassificationClient {
         }
 
         Log.d(TAG, "result: "+results.toString());
+
+        int cnt = 0;
+        for(int i=0; i< results.size(); i++) {
+            if(results.get(i).getConfidence() < 0.20) {
+                Log.d(TAG, results.get(i).title + "confidence: "+results.get(i).getConfidence());
+                Log.d(TAG, results.get(i).title + ": cnt++");
+                cnt++;
+            }
+        }
         // Return the probability of each class.
 //        return results;
-        return results.get(0).title;
+        Log.d(TAG, "cnt: "+ cnt);
+        Log.d(TAG, "results.size" + results.size());
+        if(cnt == results.size()) {
+            return String.valueOf(0);
+        }
+        else {
+            return results.get(0).title;
+        }
     }
 
 
