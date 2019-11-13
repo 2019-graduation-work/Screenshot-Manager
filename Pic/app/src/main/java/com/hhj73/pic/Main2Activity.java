@@ -93,6 +93,8 @@ public class Main2Activity extends AppCompatActivity {
     double processRate = 0;
     TextView processTextView;
 
+    Thread thread, UIThread;
+
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
@@ -115,7 +117,7 @@ public class Main2Activity extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
 
-        Thread thread = new Thread(new Runnable() {
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -129,7 +131,7 @@ public class Main2Activity extends AppCompatActivity {
         thread.start();
 
         // UI thread
-        Thread UIThread = new Thread(new Runnable() {
+        UIThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
@@ -271,7 +273,7 @@ public class Main2Activity extends AppCompatActivity {
                     editor.commit();
 
                     int total = pictures.size();
-                    processRate = ((double) (i+1) / total) * 100;
+                    processRate = ((double) (i) / total) * 100;
                     progress.setProgress((int) processRate);
                 }
                 catch (Exception e) {
@@ -294,13 +296,13 @@ public class Main2Activity extends AppCompatActivity {
                 }
                 for(int i=index; i<pictures.size(); i++) {
                     Log.d(TAG, "====================");
-                    count++;
 
                     Log.d(TAG2, "count: "+count);
                     Log.d(TAG2, "count/total: "+count/total);
                     processRate = ((double) count / total) * 100;
                     progress.setProgress((int)processRate);
                     Log.d(TAG2, "rate: "+processRate);
+                    count++;
 
                     Picture picture = pictures.get(i);
                     if(picture == null )
@@ -669,6 +671,8 @@ public class Main2Activity extends AppCompatActivity {
             });
             loaded = true;
         }
+//        thread.start();
+//        UIThread.start();
     }
 
 //    @Override

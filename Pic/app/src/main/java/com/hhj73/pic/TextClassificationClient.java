@@ -193,7 +193,7 @@ public class TextClassificationClient {
 
         int cnt = 0;
         for(int i=0; i< results.size(); i++) {
-            if(results.get(i).getConfidence() < 0.20) {
+            if(results.get(i).getConfidence() < 0.10) {
                 Log.d(TAG, results.get(i).title + "confidence: "+results.get(i).getConfidence());
                 Log.d(TAG, results.get(i).title + ": cnt++");
                 cnt++;

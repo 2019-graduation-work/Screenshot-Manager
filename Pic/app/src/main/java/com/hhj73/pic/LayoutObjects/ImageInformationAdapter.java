@@ -40,6 +40,7 @@ public class ImageInformationAdapter extends RecyclerView.Adapter<ImageInformati
         private TextView dateTextView;
         private TextView keywordTextView;
         private TextView contentsTextView;
+        private TextView categoryTextView;
 
         ItemViewHolder(View itemView) {
             super(itemView);
@@ -47,12 +48,16 @@ public class ImageInformationAdapter extends RecyclerView.Adapter<ImageInformati
             dateTextView = (TextView) itemView.findViewById(R.id.dateTextView);
             keywordTextView = (TextView) itemView.findViewById(R.id.keywordTextView);
             contentsTextView = (TextView) itemView.findViewById(R.id.contentsTextView);
+            categoryTextView = (TextView) itemView.findViewById(R.id.categoryTextView);
         }
 
         void onBind(Picture picture) {
             dateTextView.setText(picture.getDate());
             keywordTextView.setText(picture.getKeyword());
             contentsTextView.setText(picture.getContents());
+            int main = picture.getCategory() / 10;
+            int sub = picture.getCategory() % 10;
+            categoryTextView.setText(Picture.names_kor[main][sub]);
         }
     }
 }
