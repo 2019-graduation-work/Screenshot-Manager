@@ -253,7 +253,14 @@ public class Main2Activity extends AppCompatActivity {
                     tessBaseAPI.setImage(img);
                     String result = tessBaseAPI.getUTF8Text();
                     result = result.replaceAll("!\"#[$]%&\\(\\)\\{\\}@`[*]:[+];-.<>,\\^~|'\\[\\]", "");
-                    Log.d(TAG, "result: "+result);
+
+//                    Pattern p = Pattern.compile("[^ㄱ-ㅣ가-힣0-9a-zA-Z\\\\s]");
+//                    Matcher m = p.matcher(result);
+//
+//                    if(m.find()) {
+//                        result = m.group();
+//                    }
+                   Log.d(TAG, "result: "+result);
 
                     picture.setContents(result);
 
@@ -340,8 +347,14 @@ public class Main2Activity extends AppCompatActivity {
                         tessBaseAPI.setImage(img);
                         String result = tessBaseAPI.getUTF8Text();
                         result = result.replaceAll("!\"#[$]%&\\(\\)\\{\\}@`[*]:[+];-.<>,\\^~|'\\[\\]", "");
-
+//                        Pattern p = Pattern.compile("[^ㄱ-ㅣ가-힝0-9a-zA-Z\\\\s]");
+//                        Matcher m = p.matcher(result);
+//
+//                        if(m.find()) {
+//                            result = m.group();
+//                        }
                         Log.d(TAG, "result: "+result);
+
 
                         picture.setContents(result);
 
